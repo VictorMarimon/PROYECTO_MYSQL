@@ -155,7 +155,7 @@ CREATE TABLE IF NOT EXISTS `la_verde`.`EMPLEADO` (
   `fecha_contrato` DATETIME NOT NULL,
   `fecha_nacimiento` DATETIME NOT NULL,
   `genero` VARCHAR(45) NOT NULL,
-  `CARGO_cargo_id` INT NOT NULL,
+  `cargo_id` INT NOT NULL,
   `direccion_id` INT NOT NULL,
   `usuario_id` INT NOT NULL,
   PRIMARY KEY (`cc_empleado`),
@@ -163,7 +163,7 @@ CREATE TABLE IF NOT EXISTS `la_verde`.`EMPLEADO` (
   INDEX `usuario_id` (`usuario_id` ASC) VISIBLE,
   INDEX `direccion_id` (`direccion_id` ASC) VISIBLE,
   UNIQUE INDEX `cc_empleado_UNIQUE` (`cc_empleado` ASC) VISIBLE,
-  INDEX `fk_EMPLEADO_CARGO1_idx` (`CARGO_cargo_id` ASC) VISIBLE,
+  INDEX `fk_EMPLEADO_CARGO1_idx` (`cargo_id` ASC) VISIBLE,
   CONSTRAINT `EMPLEADO_ibfk_1`
     FOREIGN KEY (`usuario_id`)
     REFERENCES `la_verde`.`USUARIO` (`usuario_id`),
@@ -171,7 +171,7 @@ CREATE TABLE IF NOT EXISTS `la_verde`.`EMPLEADO` (
     FOREIGN KEY (`direccion_id`)
     REFERENCES `la_verde`.`DIRECCION` (`id`),
   CONSTRAINT `fk_EMPLEADO_CARGO1`
-    FOREIGN KEY (`CARGO_cargo_id`)
+    FOREIGN KEY (`cargo_id`)
     REFERENCES `la_verde`.`CARGO` (`cargo_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
@@ -188,12 +188,12 @@ CREATE TABLE IF NOT EXISTS `la_verde`.`PRODUCTO` (
   `descripcion` VARCHAR(255) NOT NULL,
   `cantidad` INT NOT NULL,
   `fecha_vencimiento` DATETIME NOT NULL,
-  `CATEGORIA_ID` INT NOT NULL,
+  `categoria_id` INT NOT NULL,
   `precio` INT NOT NULL,
   PRIMARY KEY (`producto_id`),
-  INDEX `fk_PRODUCTO_CATEGORIA1_idx` (`CATEGORIA_ID` ASC) VISIBLE,
+  INDEX `fk_PRODUCTO_CATEGORIA1_idx` (`categoria_id` ASC) VISIBLE,
   CONSTRAINT `fk_PRODUCTO_CATEGORIA1`
-    FOREIGN KEY (`CATEGORIA_ID`)
+    FOREIGN KEY (`categoria_id`)
     REFERENCES `la_verde`.`CATEGORIA_PRO` (`id_categoria`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb3;
@@ -252,7 +252,7 @@ DEFAULT CHARACTER SET = utf8mb3;
 CREATE TABLE IF NOT EXISTS `la_verde`.`VENTA_PRODUCTO` (
   `venta_id` INT NOT NULL,
   `producto_id` INT NOT NULL,
-  `FECHA` DATETIME NOT NULL,
+  `fecha` DATETIME NOT NULL,
   PRIMARY KEY (`venta_id`, `producto_id`),
   INDEX `producto_id` (`producto_id` ASC) VISIBLE,
   CONSTRAINT `VENTA_PRODUCTO_ibfk_1`
@@ -286,11 +286,11 @@ CREATE TABLE IF NOT EXISTS `la_verde`.`INSUMOS` (
   `estado` VARCHAR(45) NOT NULL,
   `cantidad` INT NOT NULL,
   `ubicacion` VARCHAR(45) NULL,
-  `CATEGORIA_INS_categoria_id` INT NOT NULL,
+  `categoria_id` INT NOT NULL,
   PRIMARY KEY (`idINSUMOS`),
-  INDEX `fk_INSUMOS_CATEGORIA_INS1_idx` (`CATEGORIA_INS_categoria_id` ASC) VISIBLE,
+  INDEX `fk_INSUMOS_CATEGORIA_INS1_idx` (`categoria_id` ASC) VISIBLE,
   CONSTRAINT `fk_INSUMOS_CATEGORIA_INS1`
-    FOREIGN KEY (`CATEGORIA_INS_categoria_id`)
+    FOREIGN KEY (`categoria_id`)
     REFERENCES `la_verde`.`CATEGORIA_INS` (`categoria_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
@@ -307,11 +307,11 @@ CREATE TABLE IF NOT EXISTS `la_verde`.`MAQUINARIA` (
   `modelo` VARCHAR(45) NULL,
   `numero_serie` VARCHAR(45) NOT NULL,
   `inventario_id` INT NOT NULL,
-  `INSUMOS_idINSUMOS` INT NOT NULL,
-  PRIMARY KEY (`maquinaria_id`, `INSUMOS_idINSUMOS`),
-  INDEX `fk_MAQUINARIA_INSUMOS1_idx` (`INSUMOS_idINSUMOS` ASC) VISIBLE,
+  `insumos_id` INT NOT NULL,
+  PRIMARY KEY (`maquinaria_id`, `insumos_id`),
+  INDEX `fk_MAQUINARIA_INSUMOS1_idx` (`insumos_id` ASC) VISIBLE,
   CONSTRAINT `fk_MAQUINARIA_INSUMOS1`
-    FOREIGN KEY (`INSUMOS_idINSUMOS`)
+    FOREIGN KEY (`insumos_id`)
     REFERENCES `la_verde`.`INSUMOS` (`idINSUMOS`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
@@ -348,11 +348,11 @@ CREATE TABLE IF NOT EXISTS `la_verde`.`SEMILLAS` (
   `ciclo_vida` VARCHAR(45) NOT NULL,
   `fecha_exp` DATETIME NOT NULL,
   `inventario_id` INT NOT NULL,
-  `INSUMOS_idINSUMOS` INT NOT NULL,
-  PRIMARY KEY (`semillas_id`, `INSUMOS_idINSUMOS`),
-  INDEX `fk_SEMILLAS_INSUMOS1_idx` (`INSUMOS_idINSUMOS` ASC) VISIBLE,
+  `insumos_id` INT NOT NULL,
+  PRIMARY KEY (`semillas_id`, `insumos_id`),
+  INDEX `fk_SEMILLAS_INSUMOS1_idx` (`insumos_id` ASC) VISIBLE,
   CONSTRAINT `fk_SEMILLAS_INSUMOS1`
-    FOREIGN KEY (`INSUMOS_idINSUMOS`)
+    FOREIGN KEY (`insumos_id`)
     REFERENCES `la_verde`.`INSUMOS` (`idINSUMOS`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
@@ -369,25 +369,25 @@ CREATE TABLE IF NOT EXISTS `la_verde`.`CULTIVOS` (
   `fecha_cosecha` DATETIME NOT NULL,
   `area` INT NOT NULL,
   `observaciones` VARCHAR(45) NOT NULL,
-  `TIPO_CULTIVO_tipo_cultivo_id` INT NOT NULL,
-  `TIPO_PRODUCCION_tipo_pro_id` INT NOT NULL,
-  `SEMILLAS_semillas_id` INT NOT NULL,
+  `tipo_cultivo_id` INT NOT NULL,
+  `tipo_pro_id` INT NOT NULL,
+  `semillas_id` INT NOT NULL,
   PRIMARY KEY (`cultivo_id`),
-  INDEX `fk_CULTIVOS_TIPO_CULTIVO1_idx` (`TIPO_CULTIVO_tipo_cultivo_id` ASC) VISIBLE,
-  INDEX `fk_CULTIVOS_TIPO_PRODUCCION1_idx` (`TIPO_PRODUCCION_tipo_pro_id` ASC) VISIBLE,
-  INDEX `fk_CULTIVOS_SEMILLAS1_idx` (`SEMILLAS_semillas_id` ASC) VISIBLE,
+  INDEX `fk_CULTIVOS_TIPO_CULTIVO1_idx` (`tipo_cultivo_id` ASC) VISIBLE,
+  INDEX `fk_CULTIVOS_TIPO_PRODUCCION1_idx` (`tipo_pro_id` ASC) VISIBLE,
+  INDEX `fk_CULTIVOS_SEMILLAS1_idx` (`semillas_id` ASC) VISIBLE,
   CONSTRAINT `fk_CULTIVOS_TIPO_CULTIVO1`
-    FOREIGN KEY (`TIPO_CULTIVO_tipo_cultivo_id`)
+    FOREIGN KEY (`tipo_cultivo_id`)
     REFERENCES `la_verde`.`TIPO_CULTIVO` (`tipo_cultivo_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_CULTIVOS_TIPO_PRODUCCION1`
-    FOREIGN KEY (`TIPO_PRODUCCION_tipo_pro_id`)
+    FOREIGN KEY (`tipo_pro_id`)
     REFERENCES `la_verde`.`TIPO_PRODUCCION` (`tipo_pro_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_CULTIVOS_SEMILLAS1`
-    FOREIGN KEY (`SEMILLAS_semillas_id`)
+    FOREIGN KEY (`semillas_id`)
     REFERENCES `la_verde`.`SEMILLAS` (`semillas_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
@@ -529,11 +529,11 @@ CREATE TABLE IF NOT EXISTS `la_verde`.`DEVOLUCIONES` (
   `devolucion_id` INT NOT NULL AUTO_INCREMENT,
   `fecha` DATETIME NOT NULL,
   `descripcion` VARCHAR(45) NULL,
-  `VENTA_venta_id` INT NOT NULL,
+  `venta_id` INT NOT NULL,
   PRIMARY KEY (`devolucion_id`),
-  INDEX `fk_DEVOLUCIONES_VENTA1_idx` (`VENTA_venta_id` ASC) VISIBLE,
+  INDEX `fk_DEVOLUCIONES_VENTA1_idx` (`venta_id` ASC) VISIBLE,
   CONSTRAINT `fk_DEVOLUCIONES_VENTA1`
-    FOREIGN KEY (`VENTA_venta_id`)
+    FOREIGN KEY (`venta_id`)
     REFERENCES `la_verde`.`VENTA` (`venta_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
@@ -591,11 +591,11 @@ CREATE TABLE IF NOT EXISTS `la_verde`.`HERBICIDAS` (
   `modo_uso` VARCHAR(45) NOT NULL,
   `restricciones` VARCHAR(45) NOT NULL,
   `inventario_id` INT NOT NULL,
-  `INSUMOS_idINSUMOS` INT NOT NULL,
-  PRIMARY KEY (`herbicidas_id`, `INSUMOS_idINSUMOS`),
-  INDEX `fk_HERBICIDAS_INSUMOS1_idx` (`INSUMOS_idINSUMOS` ASC) VISIBLE,
+  `insumos_id` INT NOT NULL,
+  PRIMARY KEY (`herbicidas_id`, `insumos_id`),
+  INDEX `fk_HERBICIDAS_INSUMOS1_idx` (`insumos_id` ASC) VISIBLE,
   CONSTRAINT `fk_HERBICIDAS_INSUMOS1`
-    FOREIGN KEY (`INSUMOS_idINSUMOS`)
+    FOREIGN KEY (`insumos_id`)
     REFERENCES `la_verde`.`INSUMOS` (`idINSUMOS`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
@@ -612,11 +612,11 @@ CREATE TABLE IF NOT EXISTS `la_verde`.`HERRAMIENTAS` (
   `vida_util` VARCHAR(45) NOT NULL,
   `ubicacion` VARCHAR(45) NULL,
   `inventario_id` INT NOT NULL,
-  `INSUMOS_idINSUMOS` INT NOT NULL,
-  PRIMARY KEY (`herramienta_id`, `INSUMOS_idINSUMOS`),
-  INDEX `fk_HERRAMIENTAS_INSUMOS1_idx` (`INSUMOS_idINSUMOS` ASC) VISIBLE,
+  `insumos_id` INT NOT NULL,
+  PRIMARY KEY (`herramienta_id`, `insumos_id`),
+  INDEX `fk_HERRAMIENTAS_INSUMOS1_idx` (`insumos_id` ASC) VISIBLE,
   CONSTRAINT `fk_HERRAMIENTAS_INSUMOS1`
-    FOREIGN KEY (`INSUMOS_idINSUMOS`)
+    FOREIGN KEY (`insumos_id`)
     REFERENCES `la_verde`.`INSUMOS` (`idINSUMOS`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
@@ -633,11 +633,11 @@ CREATE TABLE IF NOT EXISTS `la_verde`.`FERTILIZANTES` (
   `modo_aplicar` VARCHAR(45) NOT NULL,
   `fecha_exp` DATETIME NOT NULL,
   `inventario_id` INT NOT NULL,
-  `INSUMOS_idINSUMOS` INT NOT NULL,
-  PRIMARY KEY (`fertilizante_id`, `INSUMOS_idINSUMOS`),
-  INDEX `fk_FERTILIZANTES_INSUMOS1_idx` (`INSUMOS_idINSUMOS` ASC) VISIBLE,
+  `insumos_id` INT NOT NULL,
+  PRIMARY KEY (`fertilizante_id`, `insumos_id`),
+  INDEX `fk_FERTILIZANTES_INSUMOS1_idx` (`insumos_id` ASC) VISIBLE,
   CONSTRAINT `fk_FERTILIZANTES_INSUMOS1`
-    FOREIGN KEY (`INSUMOS_idINSUMOS`)
+    FOREIGN KEY (`insumos_id`)
     REFERENCES `la_verde`.`INSUMOS` (`idINSUMOS`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
@@ -791,21 +791,21 @@ DEFAULT CHARACTER SET = utf8mb3;
 -- Table `la_verde`.`PROVEEDOR_COMPRA_INSUMOS`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `la_verde`.`PROVEEDOR_COMPRA_INSUMOS` (
-  `PROVEEDOR_COMPRA_proveedor_nit` INT NOT NULL,
-  `PROVEEDOR_COMPRA_compra_id` INT NOT NULL,
-  `INSUMOS_idINSUMOS` INT NOT NULL,
+  `proveedor_nit` INT NOT NULL,
+  `compra_id` INT NOT NULL,
+  `insumos_id` INT NOT NULL,
   `fecha` DATETIME NOT NULL,
   `observaciones` VARCHAR(45) NULL,
-  PRIMARY KEY (`PROVEEDOR_COMPRA_proveedor_nit`, `PROVEEDOR_COMPRA_compra_id`, `INSUMOS_idINSUMOS`),
-  INDEX `fk_PROVEEDOR_COMPRA_has_INSUMOS_INSUMOS1_idx` (`INSUMOS_idINSUMOS` ASC) VISIBLE,
-  INDEX `fk_PROVEEDOR_COMPRA_has_INSUMOS_PROVEEDOR_COMPRA1_idx` (`PROVEEDOR_COMPRA_proveedor_nit` ASC, `PROVEEDOR_COMPRA_compra_id` ASC) VISIBLE,
+  PRIMARY KEY (`proveedor_nit`, `compra_id`, `insumos_id`),
+  INDEX `fk_PROVEEDOR_COMPRA_has_INSUMOS_INSUMOS1_idx` (`insumos_id` ASC) VISIBLE,
+  INDEX `fk_PROVEEDOR_COMPRA_has_INSUMOS_PROVEEDOR_COMPRA1_idx` (`proveedor_nit` ASC, `compra_id` ASC) VISIBLE,
   CONSTRAINT `fk_PROVEEDOR_COMPRA_has_INSUMOS_PROVEEDOR_COMPRA1`
-    FOREIGN KEY (`PROVEEDOR_COMPRA_proveedor_nit` , `PROVEEDOR_COMPRA_compra_id`)
+    FOREIGN KEY (`proveedor_nit` , `compra_id`)
     REFERENCES `la_verde`.`PROVEEDOR_COMPRA` (`proveedor_nit` , `compra_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_PROVEEDOR_COMPRA_has_INSUMOS_INSUMOS1`
-    FOREIGN KEY (`INSUMOS_idINSUMOS`)
+    FOREIGN KEY (`insumos_id`)
     REFERENCES `la_verde`.`INSUMOS` (`idINSUMOS`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
