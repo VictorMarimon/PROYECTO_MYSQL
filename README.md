@@ -198,16 +198,286 @@ DELIMITER ;
 
 Listado de triggers que permiten obtener información especifica de la base de datos.
 
-1. **Listar todos los videojuegos de una plataforma específica (por ejemplo, "PlayStation").**
+1. **Cuando se inserta un nuevo cliente, si su estado es inactivo, actualizar automáticamente la fecha de afiliación a NULL**
 
 ```sql
 DELIMITER //
 
-CREATE PROCEDURE ObtenerProductosPorStock(IN categoria VARCHAR(45), IN stockLimite INT)
+CREATE TRIGGER actualizarFechaAfiliacionCliente
+BEFORE INSERT ON CLIENTE FOR EACH ROW
 BEGIN
-    SELECT * 
-    FROM PRODUCTOS 
-    WHERE Categoria = categoria AND Cantidad < stockLimite;
+	IF NEW.estado = 0 THEN
+		SET NEW.fecha_afiliacion = '0000-00-00';
+ END IF;
+END //
+
+DELIMITER ;
+```
+
+2. **Antes de insertar una nueva venta en VENTA_PRODUCTO, verificar si la cantidad disponible en PRODUCTO es suficiente para realizar la venta**
+
+```sql
+DELIMITER //
+
+CREATE TRIGGER verificarCantidadProductos
+BEFORE INSERT ON VENTA_PRODUCTO FOR EACH ROW
+BEGIN
+	IF (SELECT cantidad FROM producto WHERE producto_id = NEW.producto_id) < 0 THEN
+		SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'No se puede vender este producto, debido a que no tiene existencias';
+    END IF;
+END //
+
+DELIMITER ;
+```
+
+3. **Después de una venta, disminuir la cantidad del producto en la tabla PRODUCTO**
+
+```sql
+DELIMITER //
+
+CREATE TRIGGER TIGRE
+BEFORE INSERT ON CLIENTE FOR EACH ROW
+BEGIN
+
+END //
+
+DELIMITER ;
+```
+
+4. **Cuando se elimina un empleado de la tabla EMPLEADO, actualizar automáticamente su estado en la tabla HISTORIAL_EMPLEADO como "Inactivo"**
+
+```sql
+DELIMITER //
+
+CREATE TRIGGER TIGRE
+BEFORE INSERT ON CLIENTE FOR EACH ROW
+BEGIN
+
+END //
+
+DELIMITER ;
+```
+
+5. **Antes de insertar un nuevo producto, verificar que su fecha de vencimiento no sea anterior a la fecha actual**
+
+```sql
+DELIMITER //
+
+CREATE TRIGGER TIGRE
+BEFORE INSERT ON CLIENTE FOR EACH ROW
+BEGIN
+
+END //
+
+DELIMITER ;
+```
+
+6. **Al insertar o actualizar la dirección de un cliente en la tabla DIRECCION, asegurarse de que se actualice la misma dirección en CLIENTE**
+
+```sql
+DELIMITER //
+
+CREATE TRIGGER TIGRE
+BEFORE INSERT ON CLIENTE FOR EACH ROW
+BEGIN
+
+END //
+
+DELIMITER ;
+```
+
+7. **Antes de actualizar la fecha de cosecha en CULTIVOS, verificar que no sea anterior a la fecha de siembra**
+
+```sql
+DELIMITER //
+
+CREATE TRIGGER TIGRE
+BEFORE INSERT ON CLIENTE FOR EACH ROW
+BEGIN
+
+END //
+
+DELIMITER ;
+```
+
+8. **Antes de insertar un nuevo salario en SALARIO, verificar que el monto del salario sea mayor a 0 y que el empleado esté activo**
+
+```sql
+DELIMITER //
+
+CREATE TRIGGER TIGRE
+BEFORE INSERT ON CLIENTE FOR EACH ROW
+BEGIN
+
+END //
+
+DELIMITER ;
+```
+
+9. **Después de eliminar un cliente, eliminar automáticamente las visitas asociadas en la tabla VISITAS**
+
+```sql
+DELIMITER //
+
+CREATE TRIGGER TIGRE
+BEFORE INSERT ON CLIENTE FOR EACH ROW
+BEGIN
+
+END //
+
+DELIMITER ;
+```
+
+10. **Antes de insertar una nueva compra en PROVEEDOR_COMPRA, verificar que el proveedor tenga el estado "Activo"**
+
+```sql
+DELIMITER //
+
+CREATE TRIGGER TIGRE
+BEFORE INSERT ON CLIENTE FOR EACH ROW
+BEGIN
+
+END //
+
+DELIMITER ;
+```
+
+11. **Al insertar una devolución en la tabla DEVOLUCIONES, actualizar automáticamente el estado de la venta correspondiente en VENTA a "Devuelto"**
+
+```sql
+DELIMITER //
+
+CREATE TRIGGER TIGRE
+BEFORE INSERT ON CLIENTE FOR EACH ROW
+BEGIN
+
+END //
+
+DELIMITER ;
+```
+
+12. **Después de insertar el uso de maquinaria en MAQUINARIA_CULT, reducir su disponibilidad en la tabla MAQUINARIA**
+
+```sql
+DELIMITER //
+
+CREATE TRIGGER TIGRE
+BEFORE INSERT ON CLIENTE FOR EACH ROW
+BEGIN
+
+END //
+
+DELIMITER ;
+```
+
+13. **Después de insertar una nueva compra de insumos, actualizar el stock en la tabla INSUMOS correspondiente**
+
+```sql
+DELIMITER //
+
+CREATE TRIGGER TIGRE
+BEFORE INSERT ON CLIENTE FOR EACH ROW
+BEGIN
+
+END //
+
+DELIMITER ;
+```
+
+14. **Antes de insertar un registro en HERBICIDAS_CULT, verificar que la fecha de uso no sea posterior a la fecha actual**
+
+```sql
+DELIMITER //
+
+CREATE TRIGGER TIGRE
+BEFORE INSERT ON CLIENTE FOR EACH ROW
+BEGIN
+
+END //
+
+DELIMITER ;
+```
+
+15. **Antes de insertar una nueva maquinaria en MAQUINARIA, generar automáticamente un número de serie único si no se proporciona**
+
+```sql
+DELIMITER //
+
+CREATE TRIGGER TIGRE
+BEFORE INSERT ON CLIENTE FOR EACH ROW
+BEGIN
+
+END //
+
+DELIMITER ;
+```
+
+16. **Cuando se actualice el estado de un empleado a "Inactivo" en EMPLEADO, insertar automáticamente un evento en la tabla HISTORIAL_EMPLEADO**
+
+```sql
+DELIMITER //
+
+CREATE TRIGGER TIGRE
+BEFORE INSERT ON CLIENTE FOR EACH ROW
+BEGIN
+
+END //
+
+DELIMITER ;
+```
+
+17. **Antes de insertar un nuevo uso de herramientas en HERRAMIENTAS_CULT, verificar si la herramienta está disponible en el inventario**
+
+```sql
+DELIMITER //
+
+CREATE TRIGGER TIGRE
+BEFORE INSERT ON CLIENTE FOR EACH ROW
+BEGIN
+
+END //
+
+DELIMITER ;
+```
+
+18. **Antes de insertar o actualizar el correo electrónico en las tablas CLIENTE, PROVEEDOR o EMPLEADO, validar que el formato del correo sea correcto**
+
+```sql
+DELIMITER //
+
+CREATE TRIGGER TIGRE
+BEFORE INSERT ON CLIENTE FOR EACH ROW
+BEGIN
+
+END //
+
+DELIMITER ;
+```
+
+19. **Después de actualizar cualquier detalle en la tabla PRODUCTO, insertar un registro en una tabla de historial de productos para tener un seguimiento de los cambios**
+
+```sql
+DELIMITER //
+
+CREATE TRIGGER TIGRE
+BEFORE INSERT ON CLIENTE FOR EACH ROW
+BEGIN
+
+END //
+
+DELIMITER ;
+```
+
+20. **Antes de insertar un nuevo registro en PROVEEDOR_COMPRA, calcular automáticamente el subtotal multiplicando cantidad por el precio unitario**
+
+```sql
+DELIMITER //
+
+CREATE TRIGGER TIGRE
+BEFORE INSERT ON CLIENTE FOR EACH ROW
+BEGIN
+
 END //
 
 DELIMITER ;
