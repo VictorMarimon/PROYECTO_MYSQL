@@ -21,7 +21,7 @@ El proyecto busca crear una base de datos que permita organizar y manejar de man
 
 La siguiente imágen :camera: es la representación grafica del diseño de la base de datos representada por entidades principales y entidades secundarias:
 
-![image](https://github.com/user-attachments/assets/b55c2be8-24d9-4f72-964b-a8519595954f)
+![UML](https://github.com/user-attachments/assets/3a4688d8-0453-48f3-bf0a-c133ad2442b8)
 
 ## REQUISITOS
 
