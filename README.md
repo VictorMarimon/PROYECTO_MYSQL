@@ -215,7 +215,17 @@ DELIMITER ;
 
 ## ROLES
 
-roles de la bd
+Los siguientes roles componen la estructura general de la base de datos:
+
+- ADMINISTRADOR:
+
+- PROVEEDOR:
+  
+- EMPLEADO:
+  
+- VENDEDOR:
+  
+- CLIENTE:
 
 ## AUTORES
 
