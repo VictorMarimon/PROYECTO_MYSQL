@@ -206,9 +206,9 @@ DELIMITER //
 CREATE TRIGGER actualizarFechaAfiliacionCliente
 BEFORE INSERT ON CLIENTE FOR EACH ROW
 BEGIN
-	IF NEW.estado = 0 THEN
-		SET NEW.fecha_afiliacion = '0000-00-00';
- END IF;
+IF NEW.estado = 0 THEN
+SET NEW.fecha_afiliacion = '0000-00-00';
+END IF;
 END //
 
 DELIMITER ;
