@@ -138,7 +138,7 @@ DEFAULT CHARACTER SET = utf8mb3;
 -- Table `la_verde`.`CARGO`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `la_verde`.`CARGO` (
-  `cargo_id` INT NOT NULL,
+  `cargo_id` INT NOT NULL AUTO_INCREMENT,
   `tipo` VARCHAR(45) NULL,
   PRIMARY KEY (`cargo_id`))
 ENGINE = InnoDB;
