@@ -541,31 +541,6 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `la_verde`.`PRO_VENTA`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `la_verde`.`PRO_VENTA` (
-  `producto_id` INT NOT NULL,
-  `VENTA_venta_id` INT NOT NULL,
-  `cantidad` INT NOT NULL,
-  `fecha` DATETIME NOT NULL,
-  PRIMARY KEY (`producto_id`, `VENTA_venta_id`),
-  INDEX `fk_PRODUCTO_has_VENTA_VENTA1_idx` (`VENTA_venta_id` ASC) VISIBLE,
-  INDEX `fk_PRODUCTO_has_VENTA_PRODUCTO1_idx` (`producto_id` ASC) VISIBLE,
-  CONSTRAINT `fk_PRODUCTO_has_VENTA_PRODUCTO1`
-    FOREIGN KEY (`producto_id`)
-    REFERENCES `la_verde`.`PRODUCTO` (`producto_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_PRODUCTO_has_VENTA_VENTA1`
-    FOREIGN KEY (`VENTA_venta_id`)
-    REFERENCES `la_verde`.`VENTA` (`venta_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb3;
-
-
--- -----------------------------------------------------
 -- Table `la_verde`.`COMPRA`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `la_verde`.`COMPRA` (
