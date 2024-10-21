@@ -206,9 +206,9 @@ DELIMITER //
 CREATE TRIGGER actualizarFechaAfiliacionCliente
 BEFORE INSERT ON CLIENTE FOR EACH ROW
 BEGIN
-IF NEW.estado = 0 THEN
-SET NEW.fecha_afiliacion = '0000-00-00';
-END IF;
+  IF NEW.estado = 0 THEN
+    SET NEW.fecha_afiliacion = '0000-00-00';
+  END IF;
 END //
 
 DELIMITER ;
@@ -222,10 +222,10 @@ DELIMITER //
 CREATE TRIGGER verificarCantidadProductos
 BEFORE INSERT ON VENTA_PRODUCTO FOR EACH ROW
 BEGIN
-	IF (SELECT cantidad FROM producto WHERE producto_id = NEW.producto_id) < 0 THEN
-		SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'No se puede vender este producto, debido a que no tiene existencias';
-    END IF;
+  IF (SELECT cantidad FROM producto WHERE producto_id = NEW.producto_id) < NEW.cantidad THEN
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'No se puede vender este producto, debido a que no tiene existencias';
+  END IF;
 END //
 
 DELIMITER ;
@@ -236,10 +236,12 @@ DELIMITER ;
 ```sql
 DELIMITER //
 
-CREATE TRIGGER TIGRE
-BEFORE INSERT ON CLIENTE FOR EACH ROW
+CREATE TRIGGER disminuirCantidadProducto
+AFTER INSERT ON VENTA_PRODUCTO FOR EACH ROW
 BEGIN
-
+  UPDATE PRODUCTO
+  SET cantidad = (cantidad - NEW.cantidad)
+  WHERE producto_id = NEW.producto_id;
 END //
 
 DELIMITER ;
@@ -250,10 +252,11 @@ DELIMITER ;
 ```sql
 DELIMITER //
 
-CREATE TRIGGER TIGRE
-BEFORE INSERT ON CLIENTE FOR EACH ROW
+CREATE TRIGGER eliminarHistorialEmpleado
+AFTER DELETE ON EMPLEADO FOR EACH ROW
 BEGIN
-
+  DELETE FROM HISTORIAL_EMPLEADO
+  WHERE cc_empleado = OLD.cc_empleado;
 END //
 
 DELIMITER ;
@@ -264,10 +267,13 @@ DELIMITER ;
 ```sql
 DELIMITER //
 
-CREATE TRIGGER TIGRE
-BEFORE INSERT ON CLIENTE FOR EACH ROW
+CREATE TRIGGER verificarFechaVencimientoProducto
+BEFORE INSERT ON PRODUCTO FOR EACH ROW
 BEGIN
-
+  IF NEW.fecha_vencimiento < NOW() THEN
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'No se puede insertar un producto vencido';
+  END IF;
 END //
 
 DELIMITER ;
@@ -292,10 +298,13 @@ DELIMITER ;
 ```sql
 DELIMITER //
 
-CREATE TRIGGER TIGRE
-BEFORE INSERT ON CLIENTE FOR EACH ROW
+CREATE TRIGGER verificarFechaSiembra
+BEFORE UPDATE ON CULTIVOS FOR EACH ROW
 BEGIN
-
+  IF NEW.fecha_siembra < OLD.fecha_siembra THEN
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'No se puede actualizar una fecha de siembra, debido a que es menor a la anterior';
+  END IF;
 END //
 
 DELIMITER ;
@@ -306,10 +315,13 @@ DELIMITER ;
 ```sql
 DELIMITER //
 
-CREATE TRIGGER TIGRE
-BEFORE INSERT ON CLIENTE FOR EACH ROW
+CREATE TRIGGER verificarNuevoSalario
+BEFORE INSERT ON SALARIO FOR EACH ROW
 BEGIN
-
+  IF NEW.monto < 0 OR (SELECT estado FROM EMPLEADO WHERE cc_empleado = NEW.cc_empleado) = 0 THEN
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'No se puede actualizar el salario, debido a que el salario es menor a cero o el empleado está inactivo';
+  END IF;
 END //
 
 DELIMITER ;
@@ -320,10 +332,11 @@ DELIMITER ;
 ```sql
 DELIMITER //
 
-CREATE TRIGGER TIGRE
-BEFORE INSERT ON CLIENTE FOR EACH ROW
+CREATE TRIGGER eliminarVisitasClienteEliminado
+AFTER DELETE ON CLIENTE FOR EACH ROW
 BEGIN
-
+  DELETE FROM VISITAS
+  WHERE cc_cliente = OLD.cc_cliente;
 END //
 
 DELIMITER ;
@@ -334,10 +347,13 @@ DELIMITER ;
 ```sql
 DELIMITER //
 
-CREATE TRIGGER TIGRE
-BEFORE INSERT ON CLIENTE FOR EACH ROW
+CREATE TRIGGER verificarProveedorActivo
+BEFORE INSERT ON PROVEEDOR_COMPRA FOR EACH ROW
 BEGIN
-
+  IF (SELECT estado FROM PROVEEDOR WHERE nit = NEW.proveedor_nit) LIKE '%nactivo' THEN
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'No se puede agregar la compra, debido a que el proveedor está inactivo';
+  END IF;
 END //
 
 DELIMITER ;
@@ -348,10 +364,12 @@ DELIMITER ;
 ```sql
 DELIMITER //
 
-CREATE TRIGGER TIGRE
-BEFORE INSERT ON CLIENTE FOR EACH ROW
+CREATE TRIGGER actualizarVentaDevuelta
+AFTER INSERT ON DEVOLUCIONES FOR EACH ROW
 BEGIN
-
+  UPDATE VENTA
+  SET detalle = 'Producto devuelto'
+  WHERE venta_id = NEW.venta_id;
 END //
 
 DELIMITER ;
