@@ -110,9 +110,11 @@ DEFAULT CHARACTER SET = utf8mb3;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `la_verde`.`CLIENTE` (
   `cc_cliente` INT NOT NULL,
-  `telefono` VARCHAR(15) NULL DEFAULT NULL,
-  `email` VARCHAR(255) NULL DEFAULT NULL,
+  `telefono` VARCHAR(15) NOT NULL,
+  `email` VARCHAR(255) NOT NULL,
   `estado` TINYINT(1) NOT NULL,
+  `genero` VARCHAR(45) NOT NULL,
+  `fecha_nacimiento` DATETIME NOT NULL,
   `fecha_afiliacion` DATETIME NOT NULL,
   `tipo_pago` VARCHAR(45) NOT NULL,
   `usuario_id` INT NOT NULL,
