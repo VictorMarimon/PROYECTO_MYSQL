@@ -21,7 +21,7 @@ USE `la_verde` ;
 -- Table `la_verde`.`CATEGORIA_PRO`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `la_verde`.`CATEGORIA_PRO` (
-  `id_categoria` INT NOT NULL,
+  `id_categoria` INT NOT NULL AUTO_INCREMENT,
   `nombre_categoria` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id_categoria`))
 ENGINE = InnoDB
@@ -112,7 +112,7 @@ CREATE TABLE IF NOT EXISTS `la_verde`.`CLIENTE` (
   `cc_cliente` INT NOT NULL,
   `telefono` VARCHAR(15) NOT NULL,
   `email` VARCHAR(255) NOT NULL,
-  `estado` TINYINT(1) NOT NULL,
+  `estado` VARCHAR(15) NOT NULL,
   `genero` VARCHAR(45) NOT NULL,
   `fecha_nacimiento` DATETIME NOT NULL,
   `fecha_afiliacion` DATETIME NOT NULL,
@@ -151,7 +151,7 @@ CREATE TABLE IF NOT EXISTS `la_verde`.`EMPLEADO` (
   `cc_empleado` INT UNSIGNED NOT NULL,
   `telefono` VARCHAR(15) NOT NULL,
   `email` VARCHAR(255) NOT NULL,
-  `estado` TINYINT(1) NOT NULL,
+  `estado` VARCHAR(15) NOT NULL,
   `fecha_contrato` DATETIME NOT NULL,
   `fecha_nacimiento` DATETIME NOT NULL,
   `genero` VARCHAR(45) NOT NULL,
@@ -209,7 +209,7 @@ CREATE TABLE IF NOT EXISTS `la_verde`.`PROVEEDOR` (
   `telefono` VARCHAR(15) NULL DEFAULT NULL,
   `email` VARCHAR(255) NOT NULL,
   `razon_social` VARCHAR(45) NOT NULL,
-  `estado` TINYINT(1) NOT NULL,
+  `estado` VARCHAR(15) NOT NULL,
   `direccion_id` INT NOT NULL,
   UNIQUE INDEX `nit` (`nit` ASC) VISIBLE,
   UNIQUE INDEX `email` (`email` ASC) VISIBLE,
@@ -253,6 +253,7 @@ CREATE TABLE IF NOT EXISTS `la_verde`.`VENTA_PRODUCTO` (
   `venta_id` INT NOT NULL,
   `producto_id` INT NOT NULL,
   `fecha` DATETIME NOT NULL,
+  `cantidad` INT NOT NULL,
   PRIMARY KEY (`venta_id`, `producto_id`),
   INDEX `producto_id` (`producto_id` ASC) VISIBLE,
   CONSTRAINT `VENTA_PRODUCTO_ibfk_1`
