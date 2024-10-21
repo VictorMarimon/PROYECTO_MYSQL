@@ -280,8 +280,8 @@ ENGINE = InnoDB;
 -- Table `la_verde`.`INSUMOS`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `la_verde`.`INSUMOS` (
-  `idINSUMOS` INT NOT NULL,
-  `descripcion` VARCHAR(45) NOT NULL,
+  `idINSUMOS` INT NOT NULL AUTO_INCREMENT,
+  `descripcion` VARCHAR(500) NOT NULL,
   `fecha_adq` DATETIME NOT NULL,
   `fecha_exp` DATETIME NULL,
   `estado` VARCHAR(45) NOT NULL,
@@ -309,6 +309,7 @@ CREATE TABLE IF NOT EXISTS `la_verde`.`MAQUINARIA` (
   `numero_serie` VARCHAR(45) NOT NULL,
   `inventario_id` INT NOT NULL,
   `insumos_id` INT NOT NULL,
+  `cantidad` INT NOT NULL,
   PRIMARY KEY (`maquinaria_id`, `insumos_id`),
   INDEX `fk_MAQUINARIA_INSUMOS1_idx` (`insumos_id` ASC) VISIBLE,
   CONSTRAINT `fk_MAQUINARIA_INSUMOS1`
@@ -400,8 +401,8 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `la_verde`.`INFORME` (
   `informe_id` INT NOT NULL AUTO_INCREMENT,
-  `evento` VARCHAR(45) NOT NULL,
-  `descripcion` VARCHAR(45) NOT NULL,
+  `evento` VARCHAR(500) NOT NULL,
+  `descripcion` VARCHAR(500) NOT NULL,
   `tipo` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`informe_id`))
 ENGINE = InnoDB;
@@ -545,8 +546,8 @@ ENGINE = InnoDB;
 -- Table `la_verde`.`COMPRA`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `la_verde`.`COMPRA` (
-  `compra_id` INT NOT NULL,
-  `detalle` VARCHAR(45) NULL,
+  `compra_id` INT NOT NULL AUTO_INCREMENT,
+  `detalle` VARCHAR(500) NULL,
   `cc_empleado` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`compra_id`),
   INDEX `fk_COMPRA_EMPLEADO1_idx` (`cc_empleado` ASC) VISIBLE,
@@ -593,6 +594,7 @@ CREATE TABLE IF NOT EXISTS `la_verde`.`HERBICIDAS` (
   `restricciones` VARCHAR(45) NOT NULL,
   `inventario_id` INT NOT NULL,
   `insumos_id` INT NOT NULL,
+  `cantidad` INT NOT NULL,
   PRIMARY KEY (`herbicidas_id`, `insumos_id`),
   INDEX `fk_HERBICIDAS_INSUMOS1_idx` (`insumos_id` ASC) VISIBLE,
   CONSTRAINT `fk_HERBICIDAS_INSUMOS1`
@@ -614,6 +616,7 @@ CREATE TABLE IF NOT EXISTS `la_verde`.`HERRAMIENTAS` (
   `ubicacion` VARCHAR(45) NULL,
   `inventario_id` INT NOT NULL,
   `insumos_id` INT NOT NULL,
+  `cantidad` INT NOT NULL,
   PRIMARY KEY (`herramienta_id`, `insumos_id`),
   INDEX `fk_HERRAMIENTAS_INSUMOS1_idx` (`insumos_id` ASC) VISIBLE,
   CONSTRAINT `fk_HERRAMIENTAS_INSUMOS1`
@@ -635,6 +638,7 @@ CREATE TABLE IF NOT EXISTS `la_verde`.`FERTILIZANTES` (
   `fecha_exp` DATETIME NOT NULL,
   `inventario_id` INT NOT NULL,
   `insumos_id` INT NOT NULL,
+  `cantidad` INT NOT NULL,
   PRIMARY KEY (`fertilizante_id`, `insumos_id`),
   INDEX `fk_FERTILIZANTES_INSUMOS1_idx` (`insumos_id` ASC) VISIBLE,
   CONSTRAINT `fk_FERTILIZANTES_INSUMOS1`
@@ -652,6 +656,7 @@ CREATE TABLE IF NOT EXISTS `la_verde`.`HERBICIDAS_CULT` (
   `herbicidas_id` INT NOT NULL,
   `cultivo_id` INT NOT NULL,
   `fecha_uso` DATETIME NOT NULL,
+  `cantidad` INT NOT NULL,
   PRIMARY KEY (`herbicidas_id`, `cultivo_id`),
   INDEX `fk_HERBICIDAS_has_CULTIVOS_CULTIVOS1_idx` (`cultivo_id` ASC) VISIBLE,
   INDEX `fk_HERBICIDAS_has_CULTIVOS_HERBICIDAS1_idx` (`herbicidas_id` ASC) VISIBLE,
@@ -675,6 +680,7 @@ CREATE TABLE IF NOT EXISTS `la_verde`.`FERTILIZANTES_CULT` (
   `fertilizante_id` INT NOT NULL,
   `cultivo_id` INT NOT NULL,
   `fecha_uso` DATETIME NOT NULL,
+  `cantidad` INT NOT NULL,
   PRIMARY KEY (`fertilizante_id`, `cultivo_id`),
   INDEX `fk_FERTILIZANTES_has_CULTIVOS_CULTIVOS1_idx` (`cultivo_id` ASC) VISIBLE,
   INDEX `fk_FERTILIZANTES_has_CULTIVOS_FERTILIZANTES1_idx` (`fertilizante_id` ASC) VISIBLE,
@@ -698,6 +704,7 @@ CREATE TABLE IF NOT EXISTS `la_verde`.`MAQUINARIA_CULT` (
   `maquinaria_id` INT NOT NULL,
   `cultivo_id` INT NOT NULL,
   `fecha_uso` DATETIME NOT NULL,
+  `cantidad` INT NOT NULL,
   PRIMARY KEY (`maquinaria_id`, `cultivo_id`),
   INDEX `fk_MAQUINARIA_has_CULTIVOS_CULTIVOS1_idx` (`cultivo_id` ASC) VISIBLE,
   INDEX `fk_MAQUINARIA_has_CULTIVOS_MAQUINARIA1_idx` (`maquinaria_id` ASC) VISIBLE,
@@ -721,6 +728,7 @@ CREATE TABLE IF NOT EXISTS `la_verde`.`HERRAMIENTAS_CULT` (
   `herramienta_id` INT NOT NULL,
   `cultivo_id` INT NOT NULL,
   `fecha_uso` DATETIME NOT NULL,
+  `cantidad` INT NOT NULL,
   PRIMARY KEY (`herramienta_id`, `cultivo_id`),
   INDEX `fk_HERRAMIENTAS_has_CULTIVOS_CULTIVOS1_idx` (`cultivo_id` ASC) VISIBLE,
   INDEX `fk_HERRAMIENTAS_has_CULTIVOS_HERRAMIENTAS1_idx` (`herramienta_id` ASC) VISIBLE,
