@@ -1,4 +1,4 @@
-# 💚 TABLA DE CONTENIDO 💚
+## 💚 TABLA DE CONTENIDO 💚
 
 - [UML](#UML)
 - [REQUISITOS](#REQUISITOS)
@@ -13,11 +13,11 @@
 - [AUTORES](#AUTORES)
 - [LICENCIA](#LICENCIA)
 
-# PROYECTO MySQL
+## PROYECTO MySQL
 
 El proyecto busca crear una base de datos que permita organizar y manejar de manera eficiente 📈 todas las actividades de una finca agrícola. Esta incluye la producción de diferentes productos (aguacates, maíz 🌽, leche, etc.) y la gestión de empleados 👤, maquinaria, ventas, inventarios, proveedores y clientes 👤. La meta es desarrollar un sistema que facilite el acceso y manejo de la información clave para asegurar el buen funcionamiento de la finca.
 
-# UML
+## UML
 
 La siguiente imágen :camera: es la representación grafica del diseño de la base de datos representada por entidades principales y entidades secundarias:
 
@@ -32,7 +32,7 @@ La siguiente imágen :camera: es la representación grafica del diseño de la ba
 
 para instalar...
 
-# ENTIDADES
+## ENTIDADES
 
 En esta sección se encontrara la descripción especifica de cada entidad, permitiendo conocer el modelo de negocio de la base de datos.
 
@@ -118,7 +118,7 @@ En esta sección se encontrara la descripción especifica de cada entidad, permi
 
 - VISITAS ✅: Registra visitas de clientes.
 
-# CONSULTAS
+## CONSULTAS
 
 Listado de consultas que permiten obtener información especifica de la base de datos.
 
@@ -137,7 +137,7 @@ END //
 DELIMITER ;
 ```
 
-# PROCEDIMIENTOS
+## PROCEDIMIENTOS
 
 Listado de procedimientos que permiten obtener información especifica de la base de datos.
 
@@ -156,7 +156,7 @@ END //
 DELIMITER ;
 ```
 
-# FUNCIONES
+## FUNCIONES
 
 Listado de funciones que permiten obtener información especifica de la base de datos.
 
