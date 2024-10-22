@@ -141,7 +141,300 @@ DELIMITER ;
 
 Listado de procedimientos que permiten obtener información especifica de la base de datos.
 
-1. **Listar todos los videojuegos de una plataforma específica (por ejemplo, "PlayStation").**
+1. **Procedimiento que inserta un nuevo cliente con su información personal, dirección y detalles de contacto**
+
+```sql
+DELIMITER //
+
+CREATE PROCEDURE insertarNuevoCliente(IN CEDULA INT, IN TELEFONO VARCHAR(15), IN EMAIL VARCHAR(255), IN ESTADO VARCHAR(15), IN GENERO VARCHAR(15), IN FEC_NAC DATETIME, IN FEC_AFI DATETIME, IN TIPO_PAGO VARCHAR(15), IN USUARIO_ID INT, IN DIRECCION_ID INT)
+BEGIN
+    INSERT INTO CLIENTE(cc_cliente, telefono, email, estado, genero, fecha_nacimiento, fecha_afiliacion, tipo_pago, usuario_id, direccion_id)
+    VALUES(CEDULA, TELEFONO, EMAIL, ESTADO, GENERO, FEC_NAC, FEC_AFI, TIPO_PAGO, USUARIO_ID, DIRECCION_ID);
+END //
+
+DELIMITER ;
+```
+
+2. **Procedimiento que permite actualizar el teléfono de un empleado existente**
+
+```sql
+DELIMITER //
+
+CREATE PROCEDURE actualizarTelefonoEmpleado(IN CEDULA INT, IN TELEFONO VARCHAR(15))
+BEGIN
+    UPDATE EMPLEADO
+    SET telefono = TELEFONO
+    WHERE cc_empleado = CEDULA;
+END //
+
+DELIMITER ;
+```
+
+3. **Procedimiento que elimina un cliente y todos los registros asociados, como visitas**
+
+```sql
+DELIMITER //
+
+CREATE PROCEDURE eliminarCLiente(IN CEDULA INT)
+BEGIN
+	UPDATE CLIENTE
+    SET estado = 'Inactivo'
+    WHERE cc_cliente = CEDULA;
+    
+    DELETE FROM VISITAS
+    WHERE cc_cliente = CEDULA;
+END //
+
+DELIMITER ;
+```
+
+4. **Procedimiento que devuelve una lista de productos cuyo inventario está por debajo de un nivel mínimo definido**
+
+```sql
+DELIMITER //
+
+CREATE PROCEDURE alertaProductosBajoInventario()
+BEGIN
+	SELECT nombre, cantidad FROM PRODUCTO WHERE cantidad < 10;
+END //
+
+DELIMITER ;
+```
+
+5. **Procedimiento que registra una nueva venta, asociando los productos vendidos y actualizando el inventario**
+
+```sql
+DELIMITER //
+
+CREATE PROCEDURE nuevaVenta(IN VENTA_ID INT, IN DETALLE VARCHAR(255), IN CED_CLIENTE INT, IN CED_EMPLEADO INT, IN PRODUCTO_ID INT, IN FECHA DATETIME, IN CANTIDAD INT)
+BEGIN
+	INSERT INTO VENTA (venta_id, detalle, subtotal, cc_cliente, cc_empleado)
+    VALUES(VENTA_ID, DETALLE, (CANTIDAD * (SELECT precio FROM PRODUCTO WHERE producto_id = PRODUCTO_ID)), CED_CLIENTE, CED_EMPLEADO);
+    
+    INSERT INTO VENTA_PRODUCTO (venta_id, producto_id, fecha, cantidad)
+    VALUES(VENTA_ID, PRODUCTO_ID, FECHA, CANTIDAD);
+    
+    UPDATE PRODUCTO
+    SET cantidad = (cantidad - CANTIDAD)
+    WHERE producto_id = PRODUCTO_ID;
+END //
+
+DELIMITER ;
+```
+
+6. **Procedimiento que genera un informe con todas las ventas realizadas por un empleado en un período de tiempo específico**
+
+```sql
+DELIMITER //
+
+CREATE PROCEDURE informeVentasEmpleado(IN CEDULA INT, IN FECHA DATETIME)
+BEGIN
+	SELECT detalle, subtotal, VENTA_PRODUCTO.cantidad FROM VENTA
+    INNER JOIN VENTA_PRODUCTO
+    ON VENTA.venta_id = VENTA_PRODUCTO.venta_id
+    WHERE VENTA.cc_empleado = CEDULA AND VENTA_PRODUCTO.fecha BETWEEN FECHA AND NOW();
+END //
+
+DELIMITER ;
+```
+
+7. **Procedimiento que actualiza la fecha de siembra de un cultivo**
+
+```sql
+DELIMITER //
+
+CREATE PROCEDURE actualizarFechaSiembraCultivo(IN CULTIVO_ID INT, IN FECHA DATETIME)
+BEGIN
+	UPDATE CULTIVO
+    SET fecha_siembra = FECHA
+    WHERE cultivo_id = CULTIVO_ID;
+END //
+
+DELIMITER ;
+```
+
+8. **Procedimiento que toma en cuenta bonos y salario base para calcular el salario neto de un empleado**
+
+```sql
+DELIMITER //
+
+CREATE PROCEDURE salarioEmpleado(IN CEDULA INT)
+BEGIN
+	SELECT (monto * salario) AS SueldoTotal FROM SALARIO
+    WHERE cc_empleado = CEDULA;
+END //
+
+DELIMITER ;
+```
+
+9. **Procedimiento que registra una compra de insumos y actualiza el inventario de dichos insumos**
+
+```sql
+DELIMITER //
+
+CREATE PROCEDURE ObtenerProductosPorStock(IN categoria VARCHAR(45), IN stockLimite INT)
+BEGIN
+    
+END //
+
+DELIMITER ;
+```
+
+10. **Procedimiento que devuelve una lista de clientes que viven en una ciudad específica**
+
+```sql
+DELIMITER //
+
+CREATE PROCEDURE clientesDeUnaCiudad(IN CITY VARCHAR(255))
+BEGIN
+	SELECT USUARIO.primer_nombre, USUARIO.segundo_nombre, USUARIO.primer_apellido, USUARIO.segundo_apellido FROM CLIENTE
+    INNER JOIN DIRECCION
+    ON CLIENTE.direccion_id = DIRECCION.ciudad_id
+    INNER JOIN CIUDAD
+    ON DIRECCION.ciudad_id = CIUDAD.id
+    INNER JOIN USUARIO
+    ON CLIENTE.usuario_id = USUARIO.usuario_id
+    WHERE CIUDAD.ciudad = CITY;
+END //
+
+DELIMITER ;
+```
+11. **Procedimiento que actualiza el precio de un producto existente, tomando en cuenta la inflación o cambios de mercado**
+
+```sql
+DELIMITER //
+
+CREATE PROCEDURE ObtenerProductosPorStock(IN categoria VARCHAR(45), IN stockLimite INT)
+BEGIN
+    SELECT * 
+    FROM PRODUCTOS 
+    WHERE Categoria = categoria AND Cantidad < stockLimite;
+END //
+
+DELIMITER ;
+```
+
+12. **Procedimiento que permite insertar un nuevo proveedor con su información de contacto, dirección y detalles de la empresa**
+
+```sql
+DELIMITER //
+
+CREATE PROCEDURE ObtenerProductosPorStock(IN categoria VARCHAR(45), IN stockLimite INT)
+BEGIN
+    SELECT * 
+    FROM PRODUCTOS 
+    WHERE Categoria = categoria AND Cantidad < stockLimite;
+END //
+
+DELIMITER ;
+```
+
+13. **Procedimiento que devuelve el historial completo de eventos relacionados con un empleado, como promociones o sanciones**
+
+```sql
+DELIMITER //
+
+CREATE PROCEDURE ObtenerProductosPorStock(IN categoria VARCHAR(45), IN stockLimite INT)
+BEGIN
+    SELECT * 
+    FROM PRODUCTOS 
+    WHERE Categoria = categoria AND Cantidad < stockLimite;
+END //
+
+DELIMITER ;
+```
+
+14. **Procedimiento que genera un informe del inventario actual, incluyendo productos, insumos y maquinaria**
+
+```sql
+DELIMITER //
+
+CREATE PROCEDURE ObtenerProductosPorStock(IN categoria VARCHAR(45), IN stockLimite INT)
+BEGIN
+    SELECT * 
+    FROM PRODUCTOS 
+    WHERE Categoria = categoria AND Cantidad < stockLimite;
+END //
+
+DELIMITER ;
+```
+
+15. **Procedimiento que verifica si hay suficientes existencias de un producto antes de realizar una venta**
+
+```sql
+DELIMITER //
+
+CREATE PROCEDURE ObtenerProductosPorStock(IN categoria VARCHAR(45), IN stockLimite INT)
+BEGIN
+    SELECT * 
+    FROM PRODUCTOS 
+    WHERE Categoria = categoria AND Cantidad < stockLimite;
+END //
+
+DELIMITER ;
+```
+
+16. **Procedimiento que permite registrar una devolución de producto y actualizar el estado de la venta original**
+
+```sql
+DELIMITER //
+
+CREATE PROCEDURE ObtenerProductosPorStock(IN categoria VARCHAR(45), IN stockLimite INT)
+BEGIN
+    SELECT * 
+    FROM PRODUCTOS 
+    WHERE Categoria = categoria AND Cantidad < stockLimite;
+END //
+
+DELIMITER ;
+```
+
+17. **Procedimiento que devuelve una lista de proveedores que están actualmente activos en el sistema**
+
+```sql
+DELIMITER //
+
+CREATE PROCEDURE ObtenerProductosPorStock(IN categoria VARCHAR(45), IN stockLimite INT)
+BEGIN
+    SELECT * 
+    FROM PRODUCTOS 
+    WHERE Categoria = categoria AND Cantidad < stockLimite;
+END //
+
+DELIMITER ;
+```
+
+18. **Procedimiento que asigna herramientas específicas a un empleado para realizar un trabajo y actualiza la disponibilidad de esas herramientas en el inventario**
+
+```sql
+DELIMITER //
+
+CREATE PROCEDURE ObtenerProductosPorStock(IN categoria VARCHAR(45), IN stockLimite INT)
+BEGIN
+    SELECT * 
+    FROM PRODUCTOS 
+    WHERE Categoria = categoria AND Cantidad < stockLimite;
+END //
+
+DELIMITER ;
+```
+
+19. **Procedimiento que devuelve todos los cultivos activos junto con su estado y fechas de cosecha previstas**
+
+```sql
+DELIMITER //
+
+CREATE PROCEDURE ObtenerProductosPorStock(IN categoria VARCHAR(45), IN stockLimite INT)
+BEGIN
+    SELECT * 
+    FROM PRODUCTOS 
+    WHERE Categoria = categoria AND Cantidad < stockLimite;
+END //
+
+DELIMITER ;
+```
+
+20. **Procedimiento que permite registrar la entrada de nueva maquinaria en el inventario, junto con sus especificaciones y cantidad disponible**
 
 ```sql
 DELIMITER //
