@@ -323,7 +323,7 @@ ENGINE = InnoDB;
 -- Table `la_verde`.`TIPO_PRODUCCION`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `la_verde`.`TIPO_PRODUCCION` (
-  `tipo_pro_id` INT NOT NULL,
+  `tipo_pro_id` INT NOT NULL AUTO_INCREMENT,
   `tipo` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`tipo_pro_id`))
 ENGINE = InnoDB;
@@ -333,7 +333,7 @@ ENGINE = InnoDB;
 -- Table `la_verde`.`TIPO_CULTIVO`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `la_verde`.`TIPO_CULTIVO` (
-  `tipo_cultivo_id` INT NOT NULL,
+  `tipo_cultivo_id` INT NOT NULL AUTO_INCREMENT,
   `nombre` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`tipo_cultivo_id`))
 ENGINE = InnoDB;
@@ -349,6 +349,7 @@ CREATE TABLE IF NOT EXISTS `la_verde`.`SEMILLAS` (
   `ciclo_vida` VARCHAR(45) NOT NULL,
   `fecha_exp` DATETIME NOT NULL,
   `insumos_id` INT NOT NULL,
+  `cantidad` INT NOT NULL,
   PRIMARY KEY (`semillas_id`, `insumos_id`),
   INDEX `fk_SEMILLAS_INSUMOS1_idx` (`insumos_id` ASC) VISIBLE,
   CONSTRAINT `fk_SEMILLAS_INSUMOS1`
@@ -628,9 +629,9 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `la_verde`.`FERTILIZANTES` (
   `fertilizante_id` INT NOT NULL AUTO_INCREMENT,
-  `tipo` VARCHAR(45) NOT NULL,
-  `composicion` VARCHAR(45) NOT NULL,
-  `modo_aplicar` VARCHAR(45) NOT NULL,
+  `tipo` VARCHAR(500) NOT NULL,
+  `composicion` VARCHAR(500) NOT NULL,
+  `modo_aplicar` VARCHAR(500) NOT NULL,
   `fecha_exp` DATETIME NOT NULL,
   `insumos_id` INT NOT NULL,
   `cantidad` INT NOT NULL,
