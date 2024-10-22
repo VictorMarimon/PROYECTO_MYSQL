@@ -272,9 +272,22 @@ DELIMITER ;
 ```sql
 DELIMITER //
 
-CREATE PROCEDURE ObtenerProductosPorStock(IN categoria VARCHAR(45), IN stockLimite INT)
+CREATE PROCEDURE comprarInsumos(IN CEDULA_CLI INT, IN CEDULA_EMP INT, IN NIT INT, IN INSUMO_ID INT, IN FECHA DATETIME, IN DETALLE VARCHAR(500), IN CANTIDAD_COM INT, IN PRECIO_UNI INT, IN OBSERVACIONES VARCHAR(45), IN CANTIDAD_INS INT)
 BEGIN
+	INSERT INTO COMPRA(detalle, cc_empleado)
+    VALUES(DETALLE, CEDULA_EMP);
     
+    SET @compra_id = LAST_INSERT_ID();
+    
+    INSERT INTO PROVEEDOR_COMPRA(proveedor_id, compra_id, fecha, cantidad, precio_uni)
+    VALUES(NIT, compra_id, FECHA, CANTIDAD_COM, PRECIO_UNI);
+    
+    INSERT INTO PROVEEDOR_COMPRA_INSUMOS(proveedor_id, compra_id, insumos_id, fecha, observaciones, cantidad)
+    VALUES(NIT, compra_id, INSUMO_ID, FECHA, OBSERVACIONES, CANTIDAD_INS);
+    
+    UPDATE INSUMOS
+    SET cantidad = (cantidad + CANTIDAD_INS)
+    WHERE idINSUMOS = INSUMO_ID;
 END //
 
 DELIMITER ;
@@ -304,11 +317,13 @@ DELIMITER ;
 ```sql
 DELIMITER //
 
-CREATE PROCEDURE ObtenerProductosPorStock(IN categoria VARCHAR(45), IN stockLimite INT)
+CREATE PROCEDURE actualizarPrecioProducto(IN PRODUCTO_ID INT, IN PRECIO INT)
 BEGIN
-    SELECT * 
-    FROM PRODUCTOS 
-    WHERE Categoria = categoria AND Cantidad < stockLimite;
+	IF PRECIO > 0 THEN
+		UPDATE PRODUCTO
+        SET precio = PRECIO
+        WHERE producto_id = PRODUCTO_ID;
+    END IF;
 END //
 
 DELIMITER ;
@@ -319,11 +334,13 @@ DELIMITER ;
 ```sql
 DELIMITER //
 
-CREATE PROCEDURE ObtenerProductosPorStock(IN categoria VARCHAR(45), IN stockLimite INT)
+CREATE PROCEDURE insertarProveedor(IN NIT INT, IN EMPRESA VARCHAR(255), IN TELEFONO VARCHAR(15), IN EMAIL VARCHAR(255), IN RAZON_SOCIAL VARCHAR(45), IN ESTADO VARCHAR(15), IN DIRECCION_ID INT)
 BEGIN
-    SELECT * 
-    FROM PRODUCTOS 
-    WHERE Categoria = categoria AND Cantidad < stockLimite;
+
+	IF DIRECCION_ID IN (SELECT id FROM DIRECCION) THEN
+		INSERT INTO PROVEEDOR(nit, empresa, fecha_asociacion, telefono, email, razon_social, estado, direccion_id)
+		VALUES(NIT, EMPRESA, NOW(), TELEFONO, EMAIL, RAZON_SOCIAL, ESTADO, DIRECCION_ID);
+    END IF;
 END //
 
 DELIMITER ;
@@ -334,26 +351,28 @@ DELIMITER ;
 ```sql
 DELIMITER //
 
-CREATE PROCEDURE ObtenerProductosPorStock(IN categoria VARCHAR(45), IN stockLimite INT)
+CREATE PROCEDURE historialEmpleado(IN CEDULA INT)
 BEGIN
-    SELECT * 
-    FROM PRODUCTOS 
-    WHERE Categoria = categoria AND Cantidad < stockLimite;
+	SELECT evento, descripcion, tipo, fecha FROM HISTORIAL_EMPLEADO WHERE cc_empleado = CEDULA;
 END //
 
 DELIMITER ;
 ```
 
-14. **Procedimiento que genera un informe del inventario actual, incluyendo productos, insumos y maquinaria**
+14. **Procedimiento que genera un informe del inventario actual, incluyendo productos e insumos**
 
 ```sql
 DELIMITER //
 
-CREATE PROCEDURE ObtenerProductosPorStock(IN categoria VARCHAR(45), IN stockLimite INT)
+CREATE PROCEDURE informeInventario()
 BEGIN
-    SELECT * 
-    FROM PRODUCTOS 
-    WHERE Categoria = categoria AND Cantidad < stockLimite;
+	SELECT SUM(cantidad) AS CantidadProducto FROM PRODUCTO;
+    SELECT SUM(cantidad) AS CantidadInsumos FROM INSUMOS;
+    SELECT SUM(cantidad) AS CantidadSemillas FROM SEMILLAS;
+    SELECT SUM(cantidad) AS CantidadMaquinaria FROM MAQUINARIA;
+    SELECT SUM(cantidad) AS CantidadHerramientas FROM HERRAMIENTAS;
+    SELECT SUM(cantidad) AS CantidadHerbicidas FROM HERBICIDAS;
+    SELECT SUM(cantidad) AS CantidadFertilizantes FROM FERTILIZANTES;
 END //
 
 DELIMITER ;
@@ -364,11 +383,10 @@ DELIMITER ;
 ```sql
 DELIMITER //
 
-CREATE PROCEDURE ObtenerProductosPorStock(IN categoria VARCHAR(45), IN stockLimite INT)
+CREATE PROCEDURE verificarCantidadProducto(IN PRODUCTO_ID INT)
 BEGIN
-    SELECT * 
-    FROM PRODUCTOS 
-    WHERE Categoria = categoria AND Cantidad < stockLimite;
+	SELECT cantidad AS CantidadProducto FROM PRODUCTO 
+    WHERE producto_id = PRODUCTO_ID;
 END //
 
 DELIMITER ;
@@ -394,11 +412,10 @@ DELIMITER ;
 ```sql
 DELIMITER //
 
-CREATE PROCEDURE ObtenerProductosPorStock(IN categoria VARCHAR(45), IN stockLimite INT)
+CREATE PROCEDURE proveedoresDisponibles()
 BEGIN
-    SELECT * 
-    FROM PRODUCTOS 
-    WHERE Categoria = categoria AND Cantidad < stockLimite;
+	SELECT empresa, telefono FROM PROVEEDOR 
+    WHERE estado = 'Activo' OR 'Disponible';
 END //
 
 DELIMITER ;
@@ -424,11 +441,10 @@ DELIMITER ;
 ```sql
 DELIMITER //
 
-CREATE PROCEDURE ObtenerProductosPorStock(IN categoria VARCHAR(45), IN stockLimite INT)
+CREATE PROCEDURE informeCultivo()
 BEGIN
-    SELECT * 
-    FROM PRODUCTOS 
-    WHERE Categoria = categoria AND Cantidad < stockLimite;
+	SELECT cultivo_id, fecha_siembra, fecha_cose_estimada, fecha_cosecha FROM CULTIVOS
+    WHERE estado = 'Activo' OR 'Disponible';
 END //
 
 DELIMITER ;
@@ -448,6 +464,7 @@ END //
 
 DELIMITER ;
 ```
+
 
 ## FUNCIONES
 
