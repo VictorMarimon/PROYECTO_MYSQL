@@ -412,7 +412,7 @@ ENGINE = InnoDB;
 -- Table `la_verde`.`HORARIO`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `la_verde`.`HORARIO` (
-  `horario_id` INT NOT NULL,
+  `horario_id` INT NOT NULL AUTO_INCREMENT,
   `fecha_entrada` DATETIME NULL,
   `fecha_salida` DATETIME NULL,
   PRIMARY KEY (`horario_id`))
@@ -423,7 +423,7 @@ ENGINE = InnoDB;
 -- Table `la_verde`.`HORARIO_EMPLEADO`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `la_verde`.`HORARIO_EMPLEADO` (
-  `horario_id` INT NOT NULL,
+  `horario_id` INT NOT NULL AUTO_INCREMENT,
   `cc_empleado` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`horario_id`, `cc_empleado`),
   INDEX `fk_HORARIO_EMPLEADO_has_EMPLEADO_EMPLEADO1_idx` (`cc_empleado` ASC) VISIBLE,
@@ -805,6 +805,7 @@ CREATE TABLE IF NOT EXISTS `la_verde`.`PROVEEDOR_COMPRA_INSUMOS` (
   `insumos_id` INT NOT NULL,
   `fecha` DATETIME NOT NULL,
   `observaciones` VARCHAR(45) NULL,
+  `cantidad` INT NOT NULL,
   PRIMARY KEY (`proveedor_nit`, `compra_id`, `insumos_id`),
   INDEX `fk_PROVEEDOR_COMPRA_has_INSUMOS_INSUMOS1_idx` (`insumos_id` ASC) VISIBLE,
   INDEX `fk_PROVEEDOR_COMPRA_has_INSUMOS_PROVEEDOR_COMPRA1_idx` (`proveedor_nit` ASC, `compra_id` ASC) VISIBLE,
