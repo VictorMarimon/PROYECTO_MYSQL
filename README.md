@@ -380,10 +380,12 @@ DELIMITER ;
 ```sql
 DELIMITER //
 
-CREATE TRIGGER TIGRE
-BEFORE INSERT ON CLIENTE FOR EACH ROW
+CREATE TRIGGER actualizarInventarioMaquinaria
+AFTER INSERT ON MAQUINARIA_CULT FOR EACH ROW
 BEGIN
-
+  UPDATE MAQUINARIA
+  SET cantidad = (cantidad - NEW.cantidad)
+  WHERE maquinaria_id = NEW.maquinaria_id;
 END //
 
 DELIMITER ;
@@ -394,10 +396,12 @@ DELIMITER ;
 ```sql
 DELIMITER //
 
-CREATE TRIGGER TIGRE
-BEFORE INSERT ON CLIENTE FOR EACH ROW
+CREATE TRIGGER actualizarInventarioInsumos
+AFTER INSERT ON PROVEEDOR_COMPRA_INSUMOS FOR EACH ROW
 BEGIN
-
+  UPDATE INSUMOS
+  SET cantidad = (cantidad + NEW.cantidad)
+  WHERE idINSUMOS = NEW.insumos_id;
 END //
 
 DELIMITER ;
@@ -408,10 +412,13 @@ DELIMITER ;
 ```sql
 DELIMITER //
 
-CREATE TRIGGER TIGRE
-BEFORE INSERT ON CLIENTE FOR EACH ROW
+CREATE TRIGGER verificarFechaUsoHerbicidas
+BEFORE INSERT ON HERBICIDAS_CULT FOR EACH ROW
 BEGIN
-
+  IF NEW.fecha_uso < NOW() THEN
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'No se puede relizar la insercción, debido a que la fecha de uso ya paso';
+  END IF;
 END //
 
 DELIMITER ;
@@ -422,10 +429,12 @@ DELIMITER ;
 ```sql
 DELIMITER //
 
-CREATE TRIGGER TIGRE
-BEFORE INSERT ON CLIENTE FOR EACH ROW
+CREATE TRIGGER verificarNumeroSerieMaquinaria
+BEFORE INSERT ON MAQUINARIA FOR EACH ROW
 BEGIN
-
+  IF NEW.numero_serie IS NULL THEN
+	SET NEW.numero_serie = '1111';
+  END IF;
 END //
 
 DELIMITER ;
@@ -436,10 +445,13 @@ DELIMITER ;
 ```sql
 DELIMITER //
 
-CREATE TRIGGER TIGRE
-BEFORE INSERT ON CLIENTE FOR EACH ROW
+CREATE TRIGGER enventoUsuarioInactivo
+AFTER UPDATE ON EMPLEADO FOR EACH ROW
 BEGIN
-
+  IF NEW.estado LIKE '%nactivo' THEN
+    INSERT INTO HISTORIAL_EMPLEADO(evento, descripcion, tipo, fecha, cc_empleado)
+    VALUES ('Inactividad', 'El usuario fue declarado inactivo del sistema', 'novedad', NOW(), NEW.cc_empleado);
+  END IF;
 END //
 
 DELIMITER ;
@@ -450,10 +462,13 @@ DELIMITER ;
 ```sql
 DELIMITER //
 
-CREATE TRIGGER TIGRE
-BEFORE INSERT ON CLIENTE FOR EACH ROW
+CREATE TRIGGER verificarDisponibilidadHerramientas
+BEFORE INSERT ON HERRAMIENTAS_CULT FOR EACH ROW
 BEGIN
-
+  IF (SELECT cantidad FROM HERRAMIENTAS WHERE herramienta_id = NEW.herramienta_id) < NEW.cantidad THEN
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'No se puede utilizar las herramientas, debido a que no disponibilidad de unidades';
+  END IF;
 END //
 
 DELIMITER ;
@@ -464,10 +479,26 @@ DELIMITER ;
 ```sql
 DELIMITER //
 
-CREATE TRIGGER TIGRE
+CREATE TRIGGER confirmarCorreoCliente
 BEFORE INSERT ON CLIENTE FOR EACH ROW
 BEGIN
+  IF NEW.email NOT LIKE '%@%.%' THEN
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'No se puede agregar el email, debido a que no cumple con el formato correcto';
+  END IF;
+END //
 
+DELIMITER ;
+
+DELIMITER //
+
+CREATE TRIGGER confirmarCorreoClienteActualizado
+BEFORE UPDATE ON CLIENTE FOR EACH ROW
+BEGIN
+  IF NEW.email NOT LIKE '%@%.%' THEN
+	SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'No se puede agregar el email, debido a que no cumple con el formato correcto';
+  END IF;
 END //
 
 DELIMITER ;
@@ -478,10 +509,11 @@ DELIMITER ;
 ```sql
 DELIMITER //
 
-CREATE TRIGGER TIGRE
-BEFORE INSERT ON CLIENTE FOR EACH ROW
+CREATE TRIGGER actualizacionProductoLOG
+AFTER UPDATE ON PRODUCTO FOR EACH ROW
 BEGIN
-
+  INSERT INTO log(descripcion, fecha)
+  VALUES (CONCAT('El producto: ', NEW.nombre , 'fue actualizado.'), NOW());
 END //
 
 DELIMITER ;
@@ -492,10 +524,10 @@ DELIMITER ;
 ```sql
 DELIMITER //
 
-CREATE TRIGGER TIGRE
-BEFORE INSERT ON CLIENTE FOR EACH ROW
+CREATE TRIGGER calculoSubtotalCompra
+BEFORE INSERT ON PROVEEDOR_COMPRA FOR EACH ROW
 BEGIN
-
+  SET NEW.subtotal = (NEW.cantidad * NEW.precio_uni);
 END //
 
 DELIMITER ;
