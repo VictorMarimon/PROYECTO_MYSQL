@@ -279,15 +279,17 @@ END //
 DELIMITER ;
 ```
 
-6. **Al insertar o actualizar la dirección de un cliente en la tabla DIRECCION, asegurarse de que se actualice la misma dirección en CLIENTE**
+6. **Cuando un se inserte o actualice la información personal de un cliente, el sistema se debe asegurar de que la dirección del cliente reflejada sea correcta**
 
 ```sql
 DELIMITER //
 
-CREATE TRIGGER TIGRE
+CREATE TRIGGER direccionDefaultCliente
 BEFORE INSERT ON CLIENTE FOR EACH ROW
 BEGIN
-
+  IF NEW.direccion_id IS NULL THEN
+    SET NEW.direccion_id = 1;
+  END IF;
 END //
 
 DELIMITER ;
@@ -301,7 +303,7 @@ DELIMITER //
 CREATE TRIGGER verificarFechaSiembra
 BEFORE UPDATE ON CULTIVOS FOR EACH ROW
 BEGIN
-  IF NEW.fecha_siembra < OLD.fecha_siembra THEN
+  IF NEW.fecha_cosecha < NEW.fecha_siembra THEN
     SIGNAL SQLSTATE '45000'
     SET MESSAGE_TEXT = 'No se puede actualizar una fecha de siembra, debido a que es menor a la anterior';
   END IF;
@@ -350,7 +352,7 @@ DELIMITER //
 CREATE TRIGGER verificarProveedorActivo
 BEFORE INSERT ON PROVEEDOR_COMPRA FOR EACH ROW
 BEGIN
-  IF (SELECT estado FROM PROVEEDOR WHERE nit = NEW.proveedor_nit) LIKE '%nactivo' THEN
+  IF (SELECT estado FROM PROVEEDOR WHERE nit = NEW.proveedor_nit) LIKE 'Inactivo' THEN
     SIGNAL SQLSTATE '45000'
     SET MESSAGE_TEXT = 'No se puede agregar la compra, debido a que el proveedor está inactivo';
   END IF;
@@ -415,7 +417,7 @@ DELIMITER //
 CREATE TRIGGER verificarFechaUsoHerbicidas
 BEFORE INSERT ON HERBICIDAS_CULT FOR EACH ROW
 BEGIN
-  IF NEW.fecha_uso < NOW() THEN
+  IF NEW.fecha_uso > NOW() THEN
     SIGNAL SQLSTATE '45000'
     SET MESSAGE_TEXT = 'No se puede relizar la insercción, debido a que la fecha de uso ya paso';
   END IF;
@@ -448,7 +450,7 @@ DELIMITER //
 CREATE TRIGGER enventoUsuarioInactivo
 AFTER UPDATE ON EMPLEADO FOR EACH ROW
 BEGIN
-  IF NEW.estado LIKE '%nactivo' THEN
+  IF NEW.estado LIKE 'Inactivo' THEN
     INSERT INTO HISTORIAL_EMPLEADO(evento, descripcion, tipo, fecha, cc_empleado)
     VALUES ('Inactividad', 'El usuario fue declarado inactivo del sistema', 'novedad', NOW(), NEW.cc_empleado);
   END IF;
