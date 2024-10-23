@@ -1099,7 +1099,7 @@ Los siguientes roles componen la estructura general de la base de datos:
 
 - **PROVEEDOR** 📥: El usuario vendedor tiene permisos de consulta 🔍, ademas de actualización de sus datos.
   
-- **EMPLEADO** 💼: El usuario empleado tiene permisos de 🔍 consulta en la base de datos mediante los diferentes **procedimientos almacenados**, además dependiendo de su grado de mando 👜 tendra permisos de eliminación.
+- **EMPLEADO** 💼: El usuario empleado tiene permisos de 🔍 consulta en la base de datos mediante los diferentes **procedimientos almacenados**, además dependiendo de su grado de mando 👜 tendra permisos de eliminación y la debida actualización 📝 de sus datos.
   
 - **VENDEDOR** 📍: El usuario vendedor tiene permisos de consulta 🔍, ademas de actualización 📝 de sus datos.
   
