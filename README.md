@@ -399,9 +399,9 @@ DELIMITER //
 
 CREATE PROCEDURE ObtenerProductosPorStock(IN categoria VARCHAR(45), IN stockLimite INT)
 BEGIN
-    SELECT * 
-    FROM PRODUCTOS 
-    WHERE Categoria = categoria AND Cantidad < stockLimite;
+    
+    EN ESTA PARTE HAY QUE CAMBIAR EL MODELO DE LA BASE DE DATOS, TOCA CAMBIAR LA RELACION ENTRE DEVOLUCIONES Y VENTA, DEBE SER DE MUCHOS A MUCHOS.
+
 END //
 
 DELIMITER ;
@@ -426,11 +426,16 @@ DELIMITER ;
 ```sql
 DELIMITER //
 
-CREATE PROCEDURE ObtenerProductosPorStock(IN categoria VARCHAR(45), IN stockLimite INT)
+CREATE PROCEDURE utilizarHerramientas(IN HERRAMIENTA_ID INT, IN CULTIVO_ID INT, IN FECHA DATETIME, IN CANTIDAD INT)
 BEGIN
-    SELECT * 
-    FROM PRODUCTOS 
-    WHERE Categoria = categoria AND Cantidad < stockLimite;
+	IF CANTIDAD > 0 THEN
+		INSERT INTO HERRAMIENTAS_CULT(herramienta_id, cultivo_id, fecha_uso, cantidad)
+		VALUES(HERRAMIENTA_ID, CULTIVO_ID, FECHA, CANTIDAD);
+		
+		UPDATE HERRAMIENTAS
+		SET cantidad = (cantidad - CANTIDAD)
+		WHERE herramienta_id = HERRAMIENTA_ID;
+    END IF;
 END //
 
 DELIMITER ;
@@ -455,11 +460,10 @@ DELIMITER ;
 ```sql
 DELIMITER //
 
-CREATE PROCEDURE ObtenerProductosPorStock(IN categoria VARCHAR(45), IN stockLimite INT)
+CREATE PROCEDURE ingresarMaquinaria(IN TIPO VARCHAR(45), IN MARCA VARCHAR(45), IN MODELO VARCHAR(45), IN NUM_SERIE VARCHAR(45), IN INSUMOS_ID INT, IN CANTIDAD INT)
 BEGIN
-    SELECT * 
-    FROM PRODUCTOS 
-    WHERE Categoria = categoria AND Cantidad < stockLimite;
+    INSERT INTO MAQUINARIA(tipo, marca, modelo, numero_serie, insumos_id, cantidad)
+    VALUES(TIPO, MARCA, MODELO, NUM_SERIE, INSUMOS_ID, CANTIDAD);
 END //
 
 DELIMITER ;
