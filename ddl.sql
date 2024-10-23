@@ -1,4 +1,4 @@
--- MySQL Workbench Forward Engineering
+ -- MySQL Workbench Forward Engineering
 
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
@@ -302,11 +302,11 @@ ENGINE = InnoDB;
 -- Table `la_verde`.`MAQUINARIA`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `la_verde`.`MAQUINARIA` (
-  `maquinaria_id` INT NOT NULL,
-  `tipo` VARCHAR(45) NOT NULL,
-  `marca` VARCHAR(45) NOT NULL,
-  `modelo` VARCHAR(45) NULL,
-  `numero_serie` VARCHAR(45) NOT NULL,
+  `maquinaria_id` INT NOT NULL AUTO_INCREMENT,
+  `tipo` VARCHAR(500) NOT NULL,
+  `marca` VARCHAR(500) NOT NULL,
+  `modelo` VARCHAR(500) NULL,
+  `numero_serie` VARCHAR(500) NOT NULL,
   `insumos_id` INT NOT NULL,
   `cantidad` INT NOT NULL,
   PRIMARY KEY (`maquinaria_id`, `insumos_id`),
@@ -587,10 +587,10 @@ DEFAULT CHARACTER SET = utf8mb3;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `la_verde`.`HERBICIDAS` (
   `herbicidas_id` INT NOT NULL AUTO_INCREMENT,
-  `tipo` VARCHAR(45) NOT NULL,
-  `composicion` VARCHAR(45) NOT NULL,
-  `modo_uso` VARCHAR(45) NOT NULL,
-  `restricciones` VARCHAR(45) NOT NULL,
+  `tipo` VARCHAR(500) NOT NULL,
+  `composicion` VARCHAR(500) NOT NULL,
+  `modo_uso` VARCHAR(500) NOT NULL,
+  `restricciones` VARCHAR(500) NOT NULL,
   `insumos_id` INT NOT NULL,
   `cantidad` INT NOT NULL,
   PRIMARY KEY (`herbicidas_id`, `insumos_id`),
@@ -608,10 +608,10 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `la_verde`.`HERRAMIENTAS` (
   `herramienta_id` INT NOT NULL AUTO_INCREMENT,
-  `tipo` VARCHAR(45) NOT NULL,
-  `material` VARCHAR(45) NOT NULL,
-  `vida_util` VARCHAR(45) NOT NULL,
-  `ubicacion` VARCHAR(45) NULL,
+  `tipo` VARCHAR(500) NOT NULL,
+  `material` VARCHAR(500) NOT NULL,
+  `vida_util` VARCHAR(500) NOT NULL,
+  `ubicacion` VARCHAR(500) NULL,
   `insumos_id` INT NOT NULL,
   `cantidad` INT NOT NULL,
   PRIMARY KEY (`herramienta_id`, `insumos_id`),
