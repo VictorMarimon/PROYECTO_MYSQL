@@ -226,20 +226,87 @@ DELIMITER ;
 
 Listado de funciones que permiten obtener información especifica de la base de datos.
 
-1. **Listar todos los videojuegos de una plataforma específica (por ejemplo, "PlayStation").**
+1. **Retorna la cantidad total de insumos disponibles**
 
 ```sql
 DELIMITER //
 
-CREATE PROCEDURE ObtenerProductosPorStock(IN categoria VARCHAR(45), IN stockLimite INT)
+CREATE FUNCTION calcularStockInsumos() 
+RETURNS INT
+DETERMINISTIC 
 BEGIN
-    SELECT * 
-    FROM PRODUCTOS 
-    WHERE Categoria = categoria AND Cantidad < stockLimite;
-END //
 
+    RETURN (SELECT NUM(cantidad) FROM INSUMOS);
+
+END //
 DELIMITER ;
 ```
+
+2. **Calcula la edad de un cliente usando su fecha de nacimiento registrada**
+
+```sql
+DELIMITER //
+
+CREATE FUNCTION calcularEdadCliente(CEDULA INT) 
+RETURNS INT
+DETERMINISTIC 
+BEGIN
+
+    RETURN((SELECT YEAR(fecha_nacimiento) FROM CLIENTE WHERE cc_cliente = CEDULA) - YEAR(NOW()));
+
+END //
+DELIMITER ;
+```
+
+3. **Calcula la edad de un empleado usando su fecha de nacimiento registrada**
+
+```sql
+DELIMITER //
+
+CREATE FUNCTION calcularEdadEmpleado(CEDULA INT) 
+RETURNS INT
+DETERMINISTIC 
+BEGIN
+
+    RETURN((SELECT YEAR(fecha_nacimiento) FROM EMPLEADO WHERE cc_empleado = CEDULA) - YEAR(NOW()));
+
+END //
+DELIMITER ;
+```
+
+4. **Retorna el producto con mayor cantidad de ventas de la tabla VENTA_PRODUCTO**
+
+```sql
+DELIMITER //
+
+CREATE FUNCTION obtenerProductoMasVendido() 
+RETURNS VARCHAR(100)
+DETERMINISTIC 
+BEGIN
+
+    RETURN(SELECT PRODUCTO.nombre FROM VENTA_PRODUCTO INNER JOIN PRODUCTO ON VENTA_PRODUCTO.producto_id = PRODUCTO.producto_id ORDER BY VENTA_PRODUCTO.cantidad ASC LIMIT 1);
+
+END //
+DELIMITER ;
+```
+
+5. **Devuelve el proveedor que ha realizado más transacciones**
+
+```sql
+DELIMITER //
+
+CREATE FUNCTION obtenerProveedorFrecuente()
+RETURNS VARCHAR(100)
+DETERMINISTIC 
+BEGIN
+
+    RETURN(SELECT PROVEEDOR.nombre FROM PROVEEDOR_COMPRA INNER JOIN PROVEEDOR ON PROVEEDOR_COMPRA.proveedor_nit = PROVEEDOR.nit ORDER BY COUNT(PROVEEDOR_COMPRA.proveedor_nit) LIMIT 1);
+
+END //
+DELIMITER ;
+```
+
+
 
 ## EVENTOS
 
