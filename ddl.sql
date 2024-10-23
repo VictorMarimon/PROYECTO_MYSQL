@@ -364,12 +364,12 @@ ENGINE = InnoDB;
 -- Table `la_verde`.`CULTIVOS`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `la_verde`.`CULTIVOS` (
-  `cultivo_id` INT NOT NULL,
+  `cultivo_id` INT NOT NULL AUTO_INCREMENT,
   `fecha_siembra` DATETIME NOT NULL,
   `fecha_cose_estimada` DATETIME NOT NULL,
   `fecha_cosecha` DATETIME NOT NULL,
   `area` INT NOT NULL,
-  `observaciones` VARCHAR(45) NOT NULL,
+  `observaciones` VARCHAR(500) NOT NULL,
   `tipo_cultivo_id` INT NOT NULL,
   `tipo_pro_id` INT NOT NULL,
   `semillas_id` INT NOT NULL,
@@ -445,9 +445,9 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `la_verde`.`HISTORIAL_EMPLEADO` (
   `historial_id` INT NOT NULL AUTO_INCREMENT,
-  `evento` VARCHAR(45) NOT NULL,
-  `descripcion` VARCHAR(45) NOT NULL,
-  `tipo` VARCHAR(45) NOT NULL,
+  `evento` VARCHAR(500) NOT NULL,
+  `descripcion` VARCHAR(500) NOT NULL,
+  `tipo` VARCHAR(500) NOT NULL,
   `fecha` DATETIME NOT NULL,
   `cc_empleado` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`historial_id`, `cc_empleado`),
@@ -511,7 +511,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `la_verde`.`VISITAS` (
   `visita_ID` INT NOT NULL AUTO_INCREMENT,
   `fecha` DATETIME NULL,
-  `comentarios` VARCHAR(45) NULL,
+  `comentarios` VARCHAR(500) NULL,
   `cc_cliente` INT NOT NULL,
   PRIMARY KEY (`visita_ID`),
   INDEX `fk_VISITAS_CLIENTE1_idx` (`cc_cliente` ASC) VISIBLE,
@@ -529,7 +529,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `la_verde`.`DEVOLUCIONES` (
   `devolucion_id` INT NOT NULL AUTO_INCREMENT,
   `fecha` DATETIME NOT NULL,
-  `descripcion` VARCHAR(45) NULL,
+  `descripcion` VARCHAR(500) NULL,
   `venta_id` INT NOT NULL,
   PRIMARY KEY (`devolucion_id`),
   INDEX `fk_DEVOLUCIONES_VENTA1_idx` (`venta_id` ASC) VISIBLE,
