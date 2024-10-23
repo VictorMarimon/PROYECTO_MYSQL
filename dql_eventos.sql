@@ -78,13 +78,13 @@ DO
 
 9. **Verificar el uso de herbicidas en los cultivos registrados en la tabla HERBICIDAS_CULT para asegurar su aplicación correcta.**
 
-CREATE EVENT ObtenerProductosPorStock
+CREATE EVENT evaluacionUsoHerbicidas
 ON SCHEDULE EVERY 1 MONTH 
 STARTS '2024-01-10 00:00:00'
 DO
-    SELECT * 
-    FROM PRODUCTOS 
-    WHERE Categoria = categoria AND Cantidad < stockLimite;
+    INSERT INTO log(descripcion, fecha)
+    SELECT 'El uso del herbicida no esta completo o no contiene información, se recomienda verificar los datos' , NOW()
+    WHERE (SELECT modo_uso FROM HERBICIDAS) IS NULL;
 
 10. **Revisar los precios en la tabla PRODUCTO y ajustar automáticamente según las condiciones del mercado.**
 
@@ -108,15 +108,14 @@ DO
 
 12. **Programar la generación automática de informes financieros basados en las compras y ventas registradas en COMPRA y VENTA.**
 
-DELIMITER //
-
-CREATE EVENT ObtenerProductosPorStock
+CREATE EVENT informeCompraVenta
 ON SCHEDULE EVERY 1 MONTH 
 STARTS '2024-01-10 00:00:00'
 DO
-    SELECT * 
-    FROM PRODUCTOS 
-    WHERE Categoria = categoria AND Cantidad < stockLimite;
+    INSERT INTO log(descripcion, fecha)
+    VALUES (CONCAT('Informe mensual ', NOW() ,' compras: ', (SELECT SUM(subtotal) FROM PROVEEDOR_COMPRA WHERE fecha BETWEEN (MONTH(NOW())-1) AND NOW()), 
+                   'Informe mensual ', NOW() ,' ventas: ', (SELECT SUM(subtotal) FROM VENTA INNER JOIN VENTA_PRODUCTO ON VENTA.venta_id = VENTA_PRODUCTO.venta_id WHERE VENTA_PRODUCTO.fecha BETWEEN (MONTH(NOW())-1) AND NOW())), 
+                    NOW());
 
 13. **Programar el mantenimiento de herramientas en la tabla HERRAMIENTAS para asegurar su correcto funcionamiento.**
 
@@ -175,15 +174,12 @@ DO
 
 18. **Revisar y actualizar la información en la tabla HISTORIAL_EMPLEADO para reflejar cambios en el estado o desempeño del personal.**
 
-DELIMITER //
-
-CREATE EVENT ObtenerProductosPorStock
-ON SCHEDULE EVERY 1 MONTH 
-STARTS '2024-01-10 00:00:00'
-DO
-    SELECT * 
-    FROM PRODUCTOS 
-    WHERE Categoria = categoria AND Cantidad < stockLimite;
+CREATE EVENT actualizacionHistorialEmpleado
+ON SCHEDULE EVERY 1 MONTH
+STARTS '2024-01-01 00:00:00'
+DO 
+    INSERT INTO HISTORIAL_EMPLEADO(evento, descripcion, tipo, fecha, cc_empleado)
+    VALUES( 'Inicio mes', 'Se inicia un nuevo mes, el historial del empleado es actualizado', 'Informe', NOW(), (SELECT cc_empleado FROM EMPLEADO WHERE estado = 'Activo'));
 
 19. **Revisar el estado de los herbicidas registrados en HERBICIDAS antes de su uso en los cultivos.**
 
@@ -209,4 +205,4 @@ DO
 
     UPDATE PROVEEDOR
     SET telefono = '000000'
-    WHERE nit IS IN (SELECT nit FROM PROVEEDOR WHERE telefono IS NULL); // ACA TOCA ARREGLA EL WHERE
+    WHERE nit IN(SELECT nit FROM PROVEEDOR WHERE telefono IS NULL); // ACA TOCA ARREGLA EL WHERE
