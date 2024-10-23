@@ -1,4 +1,4 @@
-1. **Programar un evento para verificar el estado de las maquinarias registradas en la tabla MAQUINARIA y realizar su mantenimiento.**
+1. **Programar un evento para verificar el inventario de las maquinarias registradas y realizar su mantenimiento**
 
 CREATE EVENT estadoMaquinaria 
 ON SCHEDULE EVERY 6 MONTH 
@@ -7,7 +7,7 @@ DO
     INSERT INTO log(descripcion, fecha) 
     VALUES(CONCAT('Reporte mensual del estado de inventario de la maquinaria', '(SELECT SUM(cantidad) FROM MAQUINARIA)'), NOW()); 
 
-2. **Verificar las cantidades de insumos en la tabla INSUMOS para asegurar que no caigan por debajo del nivel mínimo.**
+2. **Verificar las cantidades de insumos para asegurar que no caigan por debajo del nivel mínimo**
 
 CREATE EVENT cantidadInsumos
 ON SCHEDULE EVERY 1 MONTH 
@@ -17,7 +17,7 @@ DO
     SELECT CONCAT('La cantidad mínima de insumos fue superada, se recomienda revisar urgentemente el inventario', (SELECT SUM(cantidad) FROM INSUMOS)), NOW()
     WHERE (SELECT SUM(cantidad) FROM INSUMOS) < 100;
 
-3. **Programar un evento para la revisión y actualización de los permisos de las maquinarias en la tabla MAQUINARIA**
+3. **Programar un evento para la revisión y actualización de los permisos de las maquinarias**
 
 CREATE EVENT ObtenerProductosPorStock
 ON SCHEDULE EVERY 1 MONTH 
@@ -27,7 +27,7 @@ DO
     FROM PRODUCTOS 
     WHERE Categoria = categoria AND Cantidad < stockLimite;
 
-4. **Generar automáticamente un evento para revisar la tabla FERTILIZANTES y asegurar que estén en buen estado antes de su uso en los cultivos.**
+4. **Generar automáticamente un evento para revisar los fertilizantes y asegurar que estén en buen estado antes de su uso en los cultivos**
 
 CREATE EVENT evaluacionFertilizantes
 ON SCHEDULE EVERY 1 WEEK 
@@ -37,7 +37,7 @@ DO
     SELECT 'El fertilizante debe ser revisado y cambiado, debido a que presenta vencimiento' , NOW()
     WHERE (SELECT fecha_exp FROM FERTILIZANTES) < NOW();
 
-5. **Revisar los productos en la tabla PRODUCTO para detectar productos cercanos a su fecha de vencimiento y emitir alertas.**
+5. **Revisar los productos para detectar productos cercanos a su fecha de vencimiento y emitir alertas**
 
 CREATE EVENT estadoProductos
 ON SCHEDULE EVERY 1 WEEK
@@ -47,7 +47,7 @@ DO
     SELECT 'El producto se encuentra vencido, se debe realizar un cambio' , NOW()
     WHERE (SELECT fecha_vencimiento FROM PRODUCTO) < NOW();
 
-6. **Generar un reporte mensual sobre las ventas registradas en la tabla VENTA y enviar un resumen al equipo de ventas.**
+6. **Generar un reporte mensual sobre las ventas registradas y enviar un resumen al equipo de ventas**
 
 CREATE EVENT estadoProductos
 ON SCHEDULE EVERY 1 MONTH
@@ -56,7 +56,7 @@ DO
     INSERT INTO log (descripcion, fecha)
     SELECT ('Las ventas del anterior mes fueron las siguientes: ', (SELECT SUM(VENTA.subtotal) FROM VENTA INNER JOIN VENTA_PRODUCTO ON VENTA.venta_id = VENTA_PRODUCTO.venta_id WHERE VENTA_PRODUCTO.fecha BETWEEN (MONTH(NOW())-1) AND NOW())) , NOW();
 
-7. **Programar un evento para evaluar el desempeño de los empleados de acuerdo con los registros de la tabla HISTORIAL_EMPLEADO.**
+7. **Programar un evento para evaluar el desempeño de los empleados**
 
 CREATE EVENT evaluacionEmpleado
 ON SCHEDULE EVERY 1 MONTH
@@ -66,7 +66,7 @@ DO
     SELECT 'El desempeño del empleado ha sido pesimo, se recomienda realizar una intervención con el empleado para mejorar ' , NOW()
     WHERE (SELECT tipo FROM HISTORIAL_EMPLEADO) = 'Grave' OR 'Pesimo';
 
-8. **Programar la revisión periódica de las semillas almacenadas en la tabla SEMILLAS para verificar su viabilidad y calidad.**
+8. **Programar la revisión periódica de las semillas almacenadas para verificar su viabilidad y calidad**
 
 CREATE EVENT evaluacionSemillas
 ON SCHEDULE EVERY 1 WEEK 
@@ -76,7 +76,7 @@ DO
     SELECT 'La semilla debe ser revisada y cambiada, debido a que presenta vencimiento' , NOW()
     WHERE (SELECT fecha_exp FROM SEMILLAS) < NOW();
 
-9. **Verificar el uso de herbicidas en los cultivos registrados en la tabla HERBICIDAS_CULT para asegurar su aplicación correcta.**
+9. **Verificar el uso de herbicidas en los cultivos para asegurar su aplicación correcta**
 
 CREATE EVENT evaluacionUsoHerbicidas
 ON SCHEDULE EVERY 1 MONTH 
@@ -86,7 +86,7 @@ DO
     SELECT 'El uso del herbicida no esta completo o no contiene información, se recomienda verificar los datos' , NOW()
     WHERE (SELECT modo_uso FROM HERBICIDAS) IS NULL;
 
-10. **Revisar los precios en la tabla PRODUCTO y ajustar automáticamente según las condiciones del mercado.**
+10. **Revisar los precios de los productos y ajustar automáticamente según las condiciones del mercado**
 
 CREATE EVENT precioProductos
 ON SCHEDULE EVERY 1 MONTH 
@@ -96,7 +96,7 @@ DO
     SET precio = 0
     WHERE cantidad < 0;
 
-11. **Programar una auditoría de las herramientas almacenadas en la tabla HERRAMIENTAS para verificar su estado y disponibilidad.**
+11. **Programar una auditoría de las herramientas almacenadas para verificar su estado y disponibilidad**
 
 CREATE EVENT evaluacionHerramientas
 ON SCHEDULE EVERY 1 WEEK 
@@ -106,7 +106,7 @@ DO
     SELECT 'El inventario de las herramientas es bajo, se deben tomar acciones' , NOW()
     WHERE (SELECT SUM(cantidad) FROM HERRAMIENTAS) < 100;
 
-12. **Programar la generación automática de informes financieros basados en las compras y ventas registradas en COMPRA y VENTA.**
+12. **Programar la generación automática de informes financieros basados en las compras y ventas registradas**
 
 CREATE EVENT informeCompraVenta
 ON SCHEDULE EVERY 1 MONTH 
@@ -117,7 +117,7 @@ DO
                    'Informe mensual ', NOW() ,' ventas: ', (SELECT SUM(subtotal) FROM VENTA INNER JOIN VENTA_PRODUCTO ON VENTA.venta_id = VENTA_PRODUCTO.venta_id WHERE VENTA_PRODUCTO.fecha BETWEEN (MONTH(NOW())-1) AND NOW())), 
                     NOW());
 
-13. **Programar el mantenimiento de herramientas en la tabla HERRAMIENTAS para asegurar su correcto funcionamiento.**
+13. **Programar el mantenimiento de herramientas para asegurar su correcto funcionamiento**
 
 DELIMITER //
 
@@ -129,7 +129,7 @@ DO
     FROM PRODUCTOS 
     WHERE Categoria = categoria AND Cantidad < stockLimite;
 
-14. **Automatizar la verificación de la fecha de vencimiento de los insumos en la tabla INSUMOS y generar alertas cuando se acerque la fecha límite.**
+14. **Automatizar la verificación de la fecha de vencimiento de los insumos y generar alertas cuando se acerque la fecha límite**
 
 CREATE EVENT evaluacionInsumos
 ON SCHEDULE EVERY 1 WEEK 
@@ -139,7 +139,7 @@ DO
     SELECT 'El insumo presenta esta vencido, se recomienda cambiarlo' , NOW()
     WHERE (SELECT fecha_exp FROM INSUMOS) < NOW();
 
-15. **Revisar los registros de la tabla PROVEEDOR para asegurar la calidad y cumplimiento de los proveedores**
+15. **Revisar los registros de proveedores para asegurar la calidad y cumplimiento**
 
 DELIMITER //
 
@@ -151,7 +151,7 @@ DO
     FROM PRODUCTOS 
     WHERE Categoria = categoria AND Cantidad < stockLimite;
 
-16. **Programar la generación de un informe basado en los registros de la tabla CULTIVOS al final de cada ciclo de cultivo, incluyendo fechas de siembra y cosecha.**
+16. **Programar la generación de un informe basado al final de cada ciclo de cultivo, incluyendo fechas de siembra y cosecha**
 
 CREATE EVENT informeCultivo
 ON SCHEDULE EVERY 3 WEEK
@@ -162,7 +162,7 @@ DO
     INNER JOIN TIPO_CULTIVO
     ON CULTIVOS.tipo_cultivo_id = TIPO_CULTIV.tipo_cultivo_id;
 
-17. **Enviar recordatorios automáticos a los clientes registrados en la tabla CLIENTE sobre pagos pendientes.**
+17. **Enviar recordatorios automáticos a los clientes sobre pagos pendientes**
 
 CREATE EVENT recordatorioPagoCliente
 ON SCHEDULE EVERY 1 WEEK
@@ -172,7 +172,7 @@ DO
     SELECT 'El cliente no ha cancelado la compra, se realiza el siguiente recordatorio para tener un control personalizado de este caso' , NOW()
     WHERE (SELECT estado FROM VENTA) = 'Pendiente' OR 'Sin Pagar';
 
-18. **Revisar y actualizar la información en la tabla HISTORIAL_EMPLEADO para reflejar cambios en el estado o desempeño del personal.**
+18. **Revisar y actualizar la información para reflejar cambios en el estado o desempeño del personal**
 
 CREATE EVENT actualizacionHistorialEmpleado
 ON SCHEDULE EVERY 1 MONTH
@@ -181,7 +181,7 @@ DO
     INSERT INTO HISTORIAL_EMPLEADO(evento, descripcion, tipo, fecha, cc_empleado)
     VALUES( 'Inicio mes', 'Se inicia un nuevo mes, el historial del empleado es actualizado', 'Informe', NOW(), (SELECT cc_empleado FROM EMPLEADO WHERE estado = 'Activo'));
 
-19. **Revisar el estado de los herbicidas registrados en HERBICIDAS antes de su uso en los cultivos.**
+19. **Revisar el estado de los herbicidas registrados antes de su uso en los cultivos**
 
 DELIMITER //
 
@@ -193,7 +193,7 @@ DO
     FROM PRODUCTOS 
     WHERE Categoria = categoria AND Cantidad < stockLimite;
 
-20. **Verificar los datos de contacto y el estado de los proveedores en la tabla PROVEEDOR para mantener la información actualizada.**
+20. **Verificar los datos de contacto y el estado de los proveedores para mantener la información actualizada.**
 
 CREATE EVENT estadoProveedores
 ON SCHEDULE EVERY 3 MONTH
