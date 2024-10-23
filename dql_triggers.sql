@@ -12,7 +12,7 @@ END //
 
 DELIMITER ;
 
-2. **Antes de insertar una nueva venta en VENTA_PRODUCTO, verificar si la cantidad disponible en PRODUCTO es suficiente para realizar la venta**
+2. **Antes de insertar una nueva venta, verificar si la cantidad disponible en PRODUCTO es suficiente para realizar la venta**
 
 DELIMITER //
 
@@ -27,7 +27,7 @@ END //
 
 DELIMITER ;
 
-3. **Después de una venta, disminuir la cantidad del producto en la tabla PRODUCTO**
+3. **Después de una venta, disminuir la cantidad del producto**
 
 DELIMITER //
 
@@ -41,7 +41,7 @@ END //
 
 DELIMITER ;
 
-4. **Cuando se elimina un empleado de la tabla EMPLEADO, actualizar automáticamente su estado en la tabla HISTORIAL_EMPLEADO como "Inactivo"**
+4. **Cuando se elimina un empleado, actualizar automáticamente su estado en la tabla HISTORIAL_EMPLEADO como "Inactivo"**
 
 DELIMITER //
 
