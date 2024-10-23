@@ -15,11 +15,11 @@
 
 ## PROYECTO MySQL
 
-El proyecto busca crear una base de datos que permita organizar y manejar de manera eficiente 📈 todas las actividades de una finca agrícola. Esta incluye la producción de diferentes productos (aguacates, maíz 🌽, leche, etc.) y la gestión de empleados 👤, maquinaria, ventas, inventarios, proveedores y clientes 👤. La meta es desarrollar un sistema que facilite el acceso y manejo de la información clave para asegurar el buen funcionamiento de la finca.
+El proyecto busca crear una **base de datos** que permita organizar y manejar de manera eficiente 📈 todas las actividades de una **finca agrícola**. Esta incluye la producción de diferentes productos (aguacates, maíz 🌽, leche, etc.) y la gestión de empleados 👤, maquinaria, ventas, inventarios, proveedores y clientes 👤. La meta es **desarrollar** un sistema que facilite el acceso y manejo de la información clave para asegurar el buen **funcionamiento** de la finca.
 
 ## UML
 
-La siguiente imágen :camera: es la representación grafica del diseño de la base de datos representada por entidades principales y entidades secundarias:
+La siguiente imágen :camera: es la representación grafica del **diseño** de la base de datos representada por entidades principales y entidades secundarias:
 
 ![UML](https://github.com/user-attachments/assets/3a4688d8-0453-48f3-bf0a-c133ad2442b8)
 
@@ -34,7 +34,7 @@ para instalar...
 
 ## ENTIDADES
 
-En esta sección se encontrara la descripción especifica de cada entidad, permitiendo conocer el modelo de negocio de la base de datos.
+En esta sección se encontrara la descripción especifica de cada entidad, permitiendo conocer el **modelo** de negocio de la base de datos.
 
 - CARGO 👲: Define cargos o roles de empleados.
 
@@ -493,20 +493,262 @@ DELIMITER ;
 
 Listado de eventos que permiten obtener información especifica de la base de datos.
 
-1. **Listar todos los videojuegos de una plataforma específica (por ejemplo, "PlayStation").**
+1. **Programar un evento para verificar el estado de las maquinarias registradas en la tabla MAQUINARIA y realizar su mantenimiento.**
+
+```sql
+
+CREATE EVENT estadoMaquinaria 
+ON SCHEDULE EVERY 6 MONTH 
+STARTS '2024-01-01 00:00:00' 
+DO 
+    INSERT INTO log(descripcion, fecha) 
+    VALUES(CONCAT('Reporte mensual del estado de inventario de la maquinaria', '(SELECT SUM(cantidad) FROM MAQUINARIA)'), NOW()); 
+
+```
+
+2. **Verificar las cantidades de insumos en la tabla INSUMOS para asegurar que no caigan por debajo del nivel mínimo.**
+
+```sql
+CREATE EVENT cantidadInsumos
+ON SCHEDULE EVERY 1 MONTH 
+STARTS '2024-01-01 00:00:00' 
+DO 
+    INSERT INTO log (descripcion, fecha)
+    SELECT CONCAT('La cantidad mínima de insumos fue superada, se recomienda revisar urgentemente el inventario', (SELECT SUM(cantidad) FROM INSUMOS)), NOW()
+    WHERE (SELECT SUM(cantidad) FROM INSUMOS) < 100;
+```
+
+3. **Programar un evento para la revisión y actualización de los permisos de las maquinarias en la tabla MAQUINARIA**
+
+```sql
+
+CREATE EVENT ObtenerProductosPorStock
+ON SCHEDULE EVERY 1 MONTH 
+STARTS '2024-01-10 00:00:00'
+DO
+    SELECT * 
+    FROM PRODUCTOS 
+    WHERE Categoria = categoria AND Cantidad < stockLimite;
+```
+
+4. **Generar automáticamente un evento para revisar la tabla FERTILIZANTES y asegurar que estén en buen estado antes de su uso en los cultivos.**
+
+```sql
+CREATE EVENT evaluacionFertilizantes
+ON SCHEDULE EVERY 1 WEEK 
+STARTS '2024-01-10 00:00:00'
+DO
+    INSERT INTO log(descripcion, fecha)
+    SELECT 'El fertilizante debe ser revisado y cambiado, debido a que presenta vencimiento' , NOW()
+    WHERE (SELECT fecha_exp FROM FERTILIZANTES) < NOW();
+```
+
+5. **Revisar los productos en la tabla PRODUCTO para detectar productos cercanos a su fecha de vencimiento y emitir alertas.**
+
+```sql
+CREATE EVENT estadoProductos
+ON SCHEDULE EVERY 1 WEEK
+STARTS '2024-01-01 00:00:00'
+DO 
+    INSERT INTO log (descripcion, fecha)
+    SELECT 'El producto se encuentra vencido, se debe realizar un cambio' , NOW()
+    WHERE (SELECT fecha_vencimiento FROM PRODUCTO) < NOW();
+```
+
+6. **Generar un reporte mensual sobre las ventas registradas en la tabla VENTA y enviar un resumen al equipo de ventas.**
+
+```sql
+CREATE EVENT estadoProductos
+ON SCHEDULE EVERY 1 MONTH
+STARTS '2024-01-01 00:00:00'
+DO 
+    INSERT INTO log (descripcion, fecha)
+    SELECT ('Las ventas del anterior mes fueron las siguientes: ', (SELECT SUM(VENTA.subtotal) FROM VENTA INNER JOIN VENTA_PRODUCTO ON VENTA.venta_id = VENTA_PRODUCTO.venta_id WHERE VENTA_PRODUCTO.fecha BETWEEN (MONTH(NOW())-1) AND NOW())) , NOW();
+```
+
+7. **Programar un evento para evaluar el desempeño de los empleados de acuerdo con los registros de la tabla HISTORIAL_EMPLEADO.**
+
+```sql
+CREATE EVENT evaluacionEmpleado
+ON SCHEDULE EVERY 1 MONTH
+STARTS '2024-01-10 00:00:00'
+DO
+    INSERT INTO log(descripcion, fecha)
+    SELECT 'El desempeño del empleado ha sido pesimo, se recomienda realizar una intervención con el empleado para mejorar ' , NOW()
+    WHERE (SELECT tipo FROM HISTORIAL_EMPLEADO) = 'Grave' OR 'Pesimo';
+```
+
+8. **Programar la revisión periódica de las semillas almacenadas en la tabla SEMILLAS para verificar su viabilidad y calidad.**
+
+```sql
+CREATE EVENT evaluacionSemillas
+ON SCHEDULE EVERY 1 WEEK 
+STARTS '2024-01-10 00:00:00'
+DO
+    INSERT INTO log(descripcion, fecha)
+    SELECT 'La semilla debe ser revisada y cambiada, debido a que presenta vencimiento' , NOW()
+    WHERE (SELECT fecha_exp FROM SEMILLAS) < NOW();
+```
+
+9. **Verificar el uso de herbicidas en los cultivos registrados en la tabla HERBICIDAS_CULT para asegurar su aplicación correcta.**
+
+```sql
+CREATE EVENT ObtenerProductosPorStock
+ON SCHEDULE EVERY 1 MONTH 
+STARTS '2024-01-10 00:00:00'
+DO
+    SELECT * 
+    FROM PRODUCTOS 
+    WHERE Categoria = categoria AND Cantidad < stockLimite;
+```
+
+10. **Revisar los precios en la tabla PRODUCTO y ajustar automáticamente según las condiciones del mercado.**
+
+```sql
+CREATE EVENT precioProductos
+ON SCHEDULE EVERY 1 MONTH 
+STARTS '2024-01-10 00:00:00'
+DO
+    UPDATE PRODUCTO
+    SET precio = 0
+    WHERE cantidad < 0;
+```
+
+11. **Programar una auditoría de las herramientas almacenadas en la tabla HERRAMIENTAS para verificar su estado y disponibilidad.**
+
+```sql
+CREATE EVENT evaluacionHerramientas
+ON SCHEDULE EVERY 1 WEEK 
+STARTS '2024-01-10 00:00:00'
+DO
+    INSERT INTO log(descripcion, fecha)
+    SELECT 'El inventario de las herramientas es bajo, se deben tomar acciones' , NOW()
+    WHERE (SELECT SUM(cantidad) FROM HERRAMIENTAS) < 100;
+```
+
+12. **Programar la generación automática de informes financieros basados en las compras y ventas registradas en COMPRA y VENTA.**
 
 ```sql
 DELIMITER //
 
-CREATE PROCEDURE ObtenerProductosPorStock(IN categoria VARCHAR(45), IN stockLimite INT)
-BEGIN
+CREATE EVENT ObtenerProductosPorStock
+ON SCHEDULE EVERY 1 MONTH 
+STARTS '2024-01-10 00:00:00'
+DO
     SELECT * 
     FROM PRODUCTOS 
     WHERE Categoria = categoria AND Cantidad < stockLimite;
-END //
-
-DELIMITER ;
 ```
+
+13. **Programar el mantenimiento de herramientas en la tabla HERRAMIENTAS para asegurar su correcto funcionamiento.**
+
+```sql
+DELIMITER //
+
+CREATE EVENT ObtenerProductosPorStock
+ON SCHEDULE EVERY 1 MONTH 
+STARTS '2024-01-10 00:00:00'
+DO
+    SELECT * 
+    FROM PRODUCTOS 
+    WHERE Categoria = categoria AND Cantidad < stockLimite;
+```
+
+14. **Automatizar la verificación de la fecha de vencimiento de los insumos en la tabla INSUMOS y generar alertas cuando se acerque la fecha límite.**
+
+```sql
+CREATE EVENT evaluacionInsumos
+ON SCHEDULE EVERY 1 WEEK 
+STARTS '2024-01-10 00:00:00'
+DO
+    INSERT INTO log(descripcion, fecha)
+    SELECT 'El insumo presenta esta vencido, se recomienda cambiarlo' , NOW()
+    WHERE (SELECT fecha_exp FROM INSUMOS) < NOW();
+```
+
+15. **Revisar los registros de la tabla PROVEEDOR para asegurar la calidad y cumplimiento de los proveedores**
+
+```sql
+DELIMITER //
+
+CREATE EVENT ObtenerProductosPorStock
+ON SCHEDULE EVERY 1 MONTH 
+STARTS '2024-01-10 00:00:00'
+DO
+    SELECT * 
+    FROM PRODUCTOS 
+    WHERE Categoria = categoria AND Cantidad < stockLimite;
+```
+
+16. **Programar la generación de un informe basado en los registros de la tabla CULTIVOS al final de cada ciclo de cultivo, incluyendo fechas de siembra y cosecha.**
+
+```sql
+CREATE EVENT informeCultivo
+ON SCHEDULE EVERY 3 WEEK
+STARTS '2024-01-10 00:00:00'
+DO
+    SELECT cultivo_id AS Cultivo, fecha_siembra AS FechaSembrado, fecha_cosecha AS FechaRecoleccion, observaciones, TIPO_CULTIVO.nombre AS TipoCultivo
+    FROM CULTIVOS
+    INNER JOIN TIPO_CULTIVO
+    ON CULTIVOS.tipo_cultivo_id = TIPO_CULTIV.tipo_cultivo_id;
+```
+
+17. **Enviar recordatorios automáticos a los clientes registrados en la tabla CLIENTE sobre pagos pendientes.**
+
+```sql
+CREATE EVENT recordatorioPagoCliente
+ON SCHEDULE EVERY 1 WEEK
+STARTS '2024-01-01 00:00:00'
+DO 
+    INSERT INTO log (descripcion, fecha)
+    SELECT 'El cliente no ha cancelado la compra, se realiza el siguiente recordatorio para tener un control personalizado de este caso' , NOW()
+    WHERE (SELECT estado FROM VENTA) = 'Pendiente' OR 'Sin Pagar';
+```
+
+18. **Revisar y actualizar la información en la tabla HISTORIAL_EMPLEADO para reflejar cambios en el estado o desempeño del personal.**
+
+```sql
+DELIMITER //
+
+CREATE EVENT ObtenerProductosPorStock
+ON SCHEDULE EVERY 1 MONTH 
+STARTS '2024-01-10 00:00:00'
+DO
+    SELECT * 
+    FROM PRODUCTOS 
+    WHERE Categoria = categoria AND Cantidad < stockLimite;
+```
+
+19. **Revisar el estado de los herbicidas registrados en HERBICIDAS antes de su uso en los cultivos.**
+
+```sql
+DELIMITER //
+
+CREATE EVENT ObtenerProductosPorStock
+ON SCHEDULE EVERY 1 MONTH 
+STARTS '2024-01-10 00:00:00'
+DO
+    SELECT * 
+    FROM PRODUCTOS 
+    WHERE Categoria = categoria AND Cantidad < stockLimite;
+```
+
+20. **Verificar los datos de contacto y el estado de los proveedores en la tabla PROVEEDOR para mantener la información actualizada.**
+
+```sql
+CREATE EVENT estadoProveedores
+ON SCHEDULE EVERY 3 MONTH
+STARTS '2024-01-01 00:00:00'
+DO 
+    INSERT INTO log (descripcion, fecha)
+    SELECT 'El proveedor no tiene su telefono actualizado, además no se encuentra activo' , NOW()
+    WHERE (SELECT telefono FROM PROVEEDOR) IS NULL AND (SELECT telefono FROM PROVEEDOR) = 'Inactivo' OR 'Desactivado';
+
+    UPDATE PROVEEDOR
+    SET telefono = '000000'
+    WHERE nit IS IN (SELECT nit FROM PROVEEDOR WHERE telefono IS NULL); // ACA TOCA ARREGLA EL WHERE
+```
+
 
 ## TRIGGERS
 
@@ -853,15 +1095,15 @@ DELIMITER ;
 
 Los siguientes roles componen la estructura general de la base de datos:
 
-- ADMINISTRADOR:
+- **ADMINISTRADOR** 💻: El usuario administrador es el **gestor** 🅰️ de la base de datos y tiene acceso a todos los permisos.
 
-- PROVEEDOR:
+- **PROVEEDOR** 📥: El usuario vendedor tiene permisos de consulta 🔍, ademas de actualización de sus datos.
   
-- EMPLEADO:
+- **EMPLEADO** 💼: El usuario empleado tiene permisos de 🔍 consulta en la base de datos mediante los diferentes **procedimientos almacenados**, además dependiendo de su grado de mando 👜 tendra permisos de eliminación.
   
-- VENDEDOR:
+- **VENDEDOR** 📍: El usuario vendedor tiene permisos de consulta 🔍, ademas de actualización 📝 de sus datos.
   
-- CLIENTE:
+- **CLIENTE** 🙋: El usuario cliente tiene permisos de 🔍 consulta, ademas de 📝 actualización de sus datos.
 
 ## AUTORES
 
@@ -870,4 +1112,4 @@ Los siguientes roles componen la estructura general de la base de datos:
 
 ## LICENCIA
 
-Este proyecto está bajo la Licencia :white_check_mark: MIT.
+Este proyecto está bajo la **Licencia** :white_check_mark: MIT.
