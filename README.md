@@ -134,19 +134,38 @@ En esta sección se encontrara la descripción especifica de cada entidad, permi
 
 Listado de consultas que permiten obtener información especifica de la base de datos.
 
-1. **Listar todos los videojuegos de una plataforma específica (por ejemplo, "PlayStation").**
-
+-- 39. Obtén el número de órdenes por categoría de producto.
 ```sql
-DELIMITER //
+SELECT CATEGORIA_PRO.nombre_categoria, COUNT(*) AS num_orders
+FROM PEDIDOS
+JOIN PRODUCTO ON PEDIDOS.id_producto = PRODUCTO.id_producto
+JOIN CATEGORIA_PRO ON PRODUCTO.id_categoria = CATEGORIA_PRO.id_categoria
+GROUP BY CATEGORIA_PRO.nombre_categoria;
+```
 
-CREATE PROCEDURE ObtenerProductosPorStock(IN categoria VARCHAR(45), IN stockLimite INT)
-BEGIN
-    SELECT * 
-    FROM PRODUCTOS 
-    WHERE Categoria = categoria AND Cantidad < stockLimite;
-END //
+-- 40. Lista todas las transacciones por tipo de pago.
+```sql
+SELECT * FROM TRANSACCIONES WHERE tipo_pago = 'Tarjeta de crédito';
+```
 
-DELIMITER ;
+-- 41. Obtén el valor total de transacciones para un tipo de pago específico.
+```sql
+SELECT SUM(valor_transaccion) FROM TRANSACCIONES WHERE tipo_pago = 'Efectivo';
+```
+
+-- 42.  Lista todos los clientes que realizaron transacciones en los últimos 6 meses.
+```sql
+SELECT DISTINCT CLIENTE.cc_cliente, CLIENTE.nombre
+FROM TRANSACCIONES
+JOIN CLIENTE ON TRANSACCIONES.cc_cliente = CLIENTE.cc_cliente
+WHERE TRANSACCIONES.fecha_transaccion > (CURDATE() - INTERVAL 6 MONTH);
+```
+
+-- 43. Obtén el conteo de transacciones por mes.
+```sql
+SELECT MONTH(fecha_transaccion) AS month, COUNT(*) AS num_transactions
+FROM TRANSACCIONES
+GROUP BY month;
 ```
 
 ## PROCEDIMIENTOS
