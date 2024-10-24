@@ -19,13 +19,12 @@ DO
 
 3. **Programar un evento para la revisión y actualización de los permisos de las maquinarias**
 
-CREATE EVENT ObtenerProductosPorStock
-ON SCHEDULE EVERY 1 MONTH 
-STARTS '2024-01-10 00:00:00'
+CREATE EVENT IF NOT EXISTS revisar_permisos_maquinaria
+ON SCHEDULE EVERY 1 MONTH
 DO
-    SELECT * 
-    FROM PRODUCTOS 
-    WHERE Categoria = categoria AND Cantidad < stockLimite;
+    UPDATE MAQUINARIA
+    SET estado = 'Revisión requerida'
+    WHERE maquinaria_id IN (SELECT maquinaria_id FROM MAQUINARIA WHERE insumos_id IS NOT NULL);
 
 4. **Generar automáticamente un evento para revisar los fertilizantes y asegurar que estén en buen estado antes de su uso en los cultivos**
 
@@ -119,15 +118,12 @@ DO
 
 13. **Programar el mantenimiento de herramientas para asegurar su correcto funcionamiento**
 
-DELIMITER //
-
-CREATE EVENT ObtenerProductosPorStock
-ON SCHEDULE EVERY 1 MONTH 
-STARTS '2024-01-10 00:00:00'
+CREATE EVENT IF NOT EXISTS programar_mantenimiento_herramientas
+ON SCHEDULE EVERY 6 MONTH
 DO
-    SELECT * 
-    FROM PRODUCTOS 
-    WHERE Categoria = categoria AND Cantidad < stockLimite;
+    UPDATE MAQUINARIA
+    SET estado = 'Mantenimiento requerido'
+    WHERE maquinaria_id IN (SELECT maquinaria_id FROM MAQUINARIA WHERE insumos_id IS NOT NULL);
 
 14. **Automatizar la verificación de la fecha de vencimiento de los insumos y generar alertas cuando se acerque la fecha límite**
 
@@ -141,15 +137,12 @@ DO
 
 15. **Revisar los registros de proveedores para asegurar la calidad y cumplimiento**
 
-DELIMITER //
-
-CREATE EVENT ObtenerProductosPorStock
-ON SCHEDULE EVERY 1 MONTH 
-STARTS '2024-01-10 00:00:00'
+CREATE EVENT IF NOT EXISTS revisar_proveedores
+ON SCHEDULE EVERY 3 MONTH
 DO
-    SELECT * 
-    FROM PRODUCTOS 
-    WHERE Categoria = categoria AND Cantidad < stockLimite;
+    UPDATE PROVEEDOR_COMPRA_INSUMOS
+    SET observaciones = 'Revisión de calidad requerida'
+    WHERE fecha < (CURDATE() - INTERVAL 3 MONTH);
 
 16. **Programar la generación de un informe basado al final de cada ciclo de cultivo, incluyendo fechas de siembra y cosecha**
 
@@ -183,15 +176,12 @@ DO
 
 19. **Revisar el estado de los herbicidas registrados antes de su uso en los cultivos**
 
-DELIMITER //
-
-CREATE EVENT ObtenerProductosPorStock
-ON SCHEDULE EVERY 1 MONTH 
-STARTS '2024-01-10 00:00:00'
+CREATE EVENT IF NOT EXISTS revisar_estado_herbicidas
+ON SCHEDULE EVERY 1 WEEK
 DO
-    SELECT * 
-    FROM PRODUCTOS 
-    WHERE Categoria = categoria AND Cantidad < stockLimite;
+    UPDATE SEMILLAS
+    SET calidad = 'Caducado'
+    WHERE fecha_exp < CURDATE();
 
 20. **Verificar los datos de contacto y el estado de los proveedores para mantener la información actualizada.**
 
