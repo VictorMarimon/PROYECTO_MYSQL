@@ -32,11 +32,17 @@ La siguiente imágen :camera: es la representación grafica del **diseño** de l
 
 Una vez instaladas las aplicaciones anteriormente especificadas en los requisitos, se recomienda ingresar al usuario de mysql, luego de eso realizar los siguientes pasos:
 
-1. Copiar el codigo del archivo DDL y pegarlo en la query de workbench, luego ejecutarlo.
+1. Realizar la respectiva configuración del usuario de MySql.
    
-2. Posteriormente se recomienda copiar los datos del archivo DML y realizar el mismo proceso; copiar y ejecutar.
+2. Ingresar o iniciar sesión al workbench con el nuevo usuario.
    
-3. Se recomienda realizar las diferentes consultas realizadas en el archivo DQL_SELECT.SQL para obtener datos importantes de la finca.
+3. Abrir una query o archivo query en el workbench.
+   
+4. Copiar el codigo del archivo DDL y pegarlo en la query de workbench, luego ejecutarlo.
+   
+5. Posteriormente se recomienda copiar los datos del archivo DML y realizar el mismo proceso; copiar y ejecutar.
+   
+6. Se recomienda realizar las diferentes consultas realizadas en el archivo DQL_SELECT.SQL para obtener datos importantes de la finca.
 
 ## ENTIDADES
 
