@@ -1,4 +1,47 @@
- -- MySQL Workbench Forward Engineering
+-- Usuarios y permisos.
+
+-- Administrador. Tiene acceso a toda la base de datos con todos los privilegios.
+CREATE USER 'admin'@'localhost' IDENTIFIED BY 'Admin_123';
+GRANT ALL PRIVILEGES ON la_verde.* TO 'nuevo_usuario'@'localhost' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
+
+-- Finanzas: Este usuario puede verificar, insertar y actualizar todo lo realcionado con finanzas de la finca.
+CREATE USER 'finanzas'@'localhost' IDENTIFIED BY 'Finanzas_123';
+GRANT INSERT, SELECT, UPDATE ON la_verde.*COMPRA TO 'finanzas'@'localhost' WITH GRANT OPTION;
+GRANT INSERT, SELECT, UPDATE ON la_verde.*VENTA TO 'finanzas'@'localhost' WITH GRANT OPTION;
+GRANT INSERT, SELECT, UPDATE ON la_verde.*PRODUCTO TO 'finanzas'@'localhost' WITH GRANT OPTION;
+GRANT INSERT, SELECT, UPDATE ON la_verde.*SALARIO TO 'finanzas'@'localhost' WITH GRANT OPTION;
+GRANT INSERT, SELECT, UPDATE ON la_verde.*INSUMOS TO 'finanzas'@'localhost' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
+
+
+-- Agrónomo: Este usuario puede modificar regitros con todo lo relacionado a su campo
+CREATE USER 'agronomo'@'localhost' IDENTIFIED BY 'Agronomo_123';
+GRANT SELECT, INSERT, UPDATE ON la_verde.SEMILLAS TO 'agronomo'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON la_verde.FERTILIZANTES TO 'agronomo'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON la_verde.HERBICIDAS TO 'agronomo'@'localhost';
+FLUSH PRIVILEGES;
+
+
+-- Logísitica: Este usuario es el encargado de administrar el inventario.
+CREATE USER 'logistica'@'localhost' IDENTIFIED BY 'Logistica_123';
+GRANT SELECT, INSERT, UPDATE, DELETE ON la_verde.INSUMOS TO 'agronomo'@'localhost';
+GRANT SELECT, INSERT, UPDATE,DELETE ON la_verde.PRODUCTO TO 'agronomo'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON la_verde.CULTIVOS TO 'agronomo'@'localhost';
+FLUSH PRIVILEGES;
+
+
+
+-- Servicio-cliente: Este usuario permite actualizar datos de los clientes.
+CREATE USER 'servicio_cliente'@'localhost' IDENTIFIED BY 'Servicio_123';
+GRANT SELECT, INSERT, UPDATE, DELETE ON la_verde.CLIENTE TO 'agronomo'@'localhost';
+GRANT SELECT, INSERT, UPDATE,DELETE ON la_verde.VENTA TO 'agronomo'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON la_verde.USUARIO TO 'agronomo'@'localhost';
+FLUSH PRIVILEGES;
+
+
+
+-- MySQL Workbench Forward Engineering
 
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
