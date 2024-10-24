@@ -30,7 +30,13 @@ La siguiente imágen :camera: es la representación grafica del **diseño** de l
 
 ## INSTALACIÓN
 
-para instalar...
+Una vez instaladas las aplicaciones anteriormente especificadas en los requisitos, se recomienda ingresar al usuario de mysql, luego de eso realizar los siguientes pasos:
+
+1. Copiar el codigo del archivo DDL y pegarlo en la query de workbench, luego ejecutarlo.
+   
+2. Posteriormente se recomienda copiar los datos del archivo DML y realizar el mismo proceso; copiar y ejecutar.
+   
+3. Se recomienda realizar las diferentes consultas realizadas en el archivo DQL_SELECT.SQL para obtener datos importantes de la finca.
 
 ## ENTIDADES
 
