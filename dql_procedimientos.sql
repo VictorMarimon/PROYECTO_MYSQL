@@ -222,16 +222,37 @@ DELIMITER ;
 
 16. **Procedimiento que permite registrar una devolución de producto y actualizar el estado de la venta original**
 
-DELIMITER //
+DELIMITER $$
 
-CREATE PROCEDURE ObtenerProductosPorStock(IN categoria VARCHAR(45), IN stockLimite INT)
+CREATE PROCEDURE registrar_devolucion_producto (
+    IN p_venta_id INT, 
+    IN p_producto_id INT,    
+    IN p_cantidad INT,     
+    IN p_razon VARCHAR(255)   
+)
 BEGIN
-    
-    EN ESTA PARTE HAY QUE CAMBIAR EL MODELO DE LA BASE DE DATOS, TOCA CAMBIAR LA RELACION ENTRE DEVOLUCIONES Y VENTA, DEBE SER DE MUCHOS A MUCHOS.
+    DECLARE v_estado_venta VARCHAR(50);
 
-END //
+    SELECT estado INTO v_estado_venta 
+    FROM VENTA 
+    WHERE venta_id = p_venta_id;
+
+    IF v_estado_venta = 'Devuelto' THEN
+        SIGNAL SQLSTATE '45000' 
+        SET MESSAGE_TEXT = 'La venta ya fue devuelta previamente.';
+    ELSE
+        INSERT INTO PROVEEDOR_COMPRA_INSUMOS (compra_id, insumos_id, cantidad, observaciones, fecha)
+        VALUES (p_venta_id, p_producto_id, p_cantidad, p_razon, NOW());
+
+        UPDATE VENTA
+        SET estado = 'Devuelto'
+        WHERE venta_id = p_venta_id;
+    END IF;
+
+END$$
 
 DELIMITER ;
+
 
 17. **Procedimiento que devuelve una lista de proveedores que están actualmente activos en el sistema**
 
