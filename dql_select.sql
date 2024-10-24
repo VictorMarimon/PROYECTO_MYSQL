@@ -1,93 +1,94 @@
--- 1.
+
+-- 1. Lista todas las categorías de productos.
 SELECT * FROM CATEGORIA_PRO;
 
--- 2. 
+-- 2. Cuenta las categorías de productos
 SELECT COUNT(*) FROM CATEGORIA_PRO;
 
 -- 3.
 SELECT * FROM CONTINENTE;
 
--- 4. 
+-- 4. Lista todos los paises de un continente en especifico
 SELECT pais FROM PAIS WHERE continente_id = 1;
 
--- 5. 
+-- 5. Cuenta el número de países en cada continente
 SELECT continente_id, COUNT(*) AS num_countries FROM PAIS GROUP BY continente_id;
 
--- 6.
+-- 6. Enumera todas las ciudades de un país específico
 SELECT ciudad FROM CIUDAD WHERE pais_id = 1;
 
--- 7. 
+-- 7. Obtiene detalles de un cliente específico por su identificación
 SELECT * FROM CLIENTE WHERE cc_cliente = 123456;
 
--- 8. 
+-- 8. Obtiene clientes que se unieron después de una fecha específica
 SELECT * FROM CLIENTE WHERE fecha_afiliacion > '2023-01-01';
 
--- 9. 
+-- 9. Obtiene la cuenta de clientes por género
 SELECT genero, COUNT(*) FROM CLIENTE GROUP BY genero;
 
--- 10. 
+-- 10. Listar los clientes y sus direcciones asociadas.
 SELECT CLIENTE.cc_cliente, CLIENTE.telefono, CLIENTE.email, DIRECCION.calle, DIRECCION.carrera, DIRECCION.numero
 FROM CLIENTE
 JOIN DIRECCION ON CLIENTE.direccion_id = DIRECCION.id;
 
--- 11. 
+-- 11. Listar todos los empleados y sus roles.
 SELECT USUARIO.nombre, CARGO.nombre_cargo
 FROM USUARIO
 JOIN CARGO ON USUARIO.cargo_id = CARGO.cargo_id;
 
--- 12. 
+-- 12. Obtén la cantidad de empleados en cada rol.
 SELECT CARGO.nombre_cargo, COUNT(*) AS num_employees
 FROM USUARIO
 JOIN CARGO ON USUARIO.cargo_id = CARGO.cargo_id
 GROUP BY CARGO.nombre_cargo;
 
--- 13. 
+-- 13. Obtén la cantidad de empleados en cada rol.
 SELECT * FROM USUARIO WHERE fecha_contratacion > '2022-01-01';
 
--- 14. 
+-- 14. Obtén los datos de contacto de un empleado específico.
 SELECT nombre, telefono, email FROM USUARIO WHERE usuario_id = 1;
 
--- 15. 
+-- 15. Lista todos los fertilizantes disponibles.
 SELECT * FROM FERTILIZANTES;
 
--- 16. 
+-- 16. Obtén la cantidad de fertilizantes por tipo.
 SELECT tipo_fertilizante, COUNT(*) FROM FERTILIZANTES GROUP BY tipo_fertilizante;
 
--- 17. 
+-- 17.  Lista todas las herramientas.
 SELECT * FROM HERRAMIENTAS;
 
--- 18.
+-- 18.  Obtén la cantidad de herramientas por tipo.
 SELECT tipo_herramienta, COUNT(*) FROM HERRAMIENTAS GROUP BY tipo_herramienta;
 
--- 19. 
+-- 19.  Obtén los detalles de una herramienta específica por su ID.
 SELECT * FROM HERRAMIENTAS WHERE id_herramienta = 1;
 
--- 20. 
+-- 20. Lista todas las semillas.
 SELECT * FROM SEMILLAS;
 
--- 21. 
+-- 21.  Obtén la cantidad de semillas por tipo.
 SELECT tipo_semilla, COUNT(*) FROM SEMILLAS GROUP BY tipo_semilla;
 
--- 22. 
+-- 22.  Obtén los detalles de una semilla específica por su ID.
 SELECT * FROM SEMILLAS WHERE id_semilla = 1;
 
--- 23. 
+-- 23.  Lista todas las ventas realizadas por un cliente específico.
 SELECT * FROM VENTAS WHERE cc_cliente = 123456;
 
--- 24. 
+-- 24.  Obtén el total de ventas realizadas por un cliente específico.
 SELECT SUM(valor_venta) FROM VENTAS WHERE cc_cliente = 123456;
 
--- 25. 
+-- 25.  Lista todas las ventas realizadas en un mes específico.
 SELECT * FROM VENTAS WHERE MONTH(fecha_venta) = 10;
 
--- 26. 
+-- 26. Obtén el total de ventas para cada categoría de producto.
 SELECT CATEGORIA_PRO.nombre_categoria, SUM(VENTAS.valor_venta) AS total_sales
 FROM VENTAS
 JOIN PRODUCTO ON VENTAS.id_producto = PRODUCTO.id_producto
 JOIN CATEGORIA_PRO ON PRODUCTO.id_categoria = CATEGORIA_PRO.id_categoria
 GROUP BY CATEGORIA_PRO.nombre_categoria;
 
--- 27. 
+-- 27. Obtén los 5 productos principales por ventas.
 SELECT PRODUCTO.nombre_producto, SUM(VENTAS.valor_venta) AS total_sales
 FROM VENTAS
 JOIN PRODUCTO ON VENTAS.id_producto = PRODUCTO.id_producto
@@ -95,95 +96,95 @@ GROUP BY PRODUCTO.nombre_producto
 ORDER BY total_sales DESC
 LIMIT 5;
 
--- 28. 
+-- 28. Obtén los ingresos totales para el año actual.
 SELECT SUM(valor_venta) AS total_revenue
 FROM VENTAS
 WHERE YEAR(fecha_venta) = YEAR(CURDATE());
 
--- 29.
+-- 29. Obtén el número total de clientes.
 SELECT COUNT(*) AS num_customers FROM CLIENTE;
 
--- 30.
+-- 30. Obtén el número de nuevos clientes por mes.
 SELECT MONTH(fecha_afiliacion) AS month, COUNT(*) AS num_customers
 FROM CLIENTE
 GROUP BY month;
 
--- 31. 
+-- 31. Obtén la lista de clientes inactivos (estado = 'inactivo').
 SELECT * FROM CLIENTE WHERE estado = 'inactivo';
 
--- 32. 
+-- 32.  Obtén la lista de clientes activos (estado = 'activo').
 SELECT * FROM CLIENTE WHERE estado = 'activo';
 
--- 33. 
+-- 33.  Obtén los clientes con un tipo de pago específico.
 SELECT * FROM CLIENTE WHERE tipo_pago = 'Tarjeta de crédito';
 
--- 34. 
+-- 34. Obtén la lista de productos en cada categoría.
 SELECT PRODUCTO.nombre_producto, CATEGORIA_PRO.nombre_categoria
 FROM PRODUCTO
 JOIN CATEGORIA_PRO ON PRODUCTO.id_categoria = CATEGORIA_PRO.id_categoria;
 
--- 35. 
+-- 35.  Obtén el stock de cada producto.
 SELECT nombre_producto, stock FROM PRODUCTO;
 
--- 36. 
+-- 36.  Obtén los productos con stock por debajo de un umbral específico.
 SELECT nombre_producto, stock FROM PRODUCTO WHERE stock < 10;
 
--- 37. 
+-- 37.  Lista todas las órdenes realizadas por un cliente específico.
 SELECT * FROM PEDIDOS WHERE cc_cliente = 123456;
 
--- 38. 
+-- 38.  Obtén el total de órdenes realizadas en el último mes.
 SELECT COUNT(*) FROM PEDIDOS WHERE fecha_pedido > (CURDATE() - INTERVAL 1 MONTH);
 
--- 39. 
+-- 39. Obtén el número de órdenes por categoría de producto.
 SELECT CATEGORIA_PRO.nombre_categoria, COUNT(*) AS num_orders
 FROM PEDIDOS
 JOIN PRODUCTO ON PEDIDOS.id_producto = PRODUCTO.id_producto
 JOIN CATEGORIA_PRO ON PRODUCTO.id_categoria = CATEGORIA_PRO.id_categoria
 GROUP BY CATEGORIA_PRO.nombre_categoria;
 
--- 40. 
+-- 40. Lista todas las transacciones por tipo de pago.
 SELECT * FROM TRANSACCIONES WHERE tipo_pago = 'Tarjeta de crédito';
 
--- 41.
+-- 41. Obtén el valor total de transacciones para un tipo de pago específico.
 SELECT SUM(valor_transaccion) FROM TRANSACCIONES WHERE tipo_pago = 'Efectivo';
 
--- 42. 
+-- 42.  Lista todos los clientes que realizaron transacciones en los últimos 6 meses.
 SELECT DISTINCT CLIENTE.cc_cliente, CLIENTE.nombre
 FROM TRANSACCIONES
 JOIN CLIENTE ON TRANSACCIONES.cc_cliente = CLIENTE.cc_cliente
 WHERE TRANSACCIONES.fecha_transaccion > (CURDATE() - INTERVAL 6 MONTH);
 
--- 43. 
+-- 43. Obtén el conteo de transacciones por mes.
 SELECT MONTH(fecha_transaccion) AS month, COUNT(*) AS num_transactions
 FROM TRANSACCIONES
 GROUP BY month;
 
--- 44. 
+-- 44. Obtén todos los comentarios dejados por los clientes.
 SELECT * FROM RETROALIMENTACION_CLIENTES;
 
--- 45. 
+-- 45.  Obtén comentarios de los clientes con una calificación específica (por ejemplo, 5 estrellas).
 SELECT * FROM RETROALIMENTACION_CLIENTES WHERE calificacion = 5;
 
--- 46.
+-- 46. Lista todos los registros de mantenimiento de herramientas.
 SELECT * FROM MANTENIMIENTO_HERRAMIENTAS;
 
--- 47. 
+-- 47. Obtén el costo total de mantenimiento del último año.
 SELECT SUM(costo_mantenimiento) FROM MANTENIMIENTO_HERRAMIENTAS WHERE YEAR(fecha_mantenimiento) = YEAR(CURDATE());
 
--- 48. 
+-- 48. Lista todos los proveedores para un producto específico.
 SELECT PROVEEDORES.nombre_proveedor
 FROM PROVEEDORES
 JOIN PRODUCTO ON PROVEEDORES.id_proveedor = PRODUCTO.id_proveedor
 WHERE PRODUCTO.id_producto = 1;
 
--- 49. 
+-- 49. Obtén el conteo de proveedores por categoría de producto.
 SELECT CATEGORIA_PRO.nombre_categoria, COUNT(DISTINCT PROVEEDORES.id_proveedor) AS num_suppliers
 FROM PRODUCTO
 JOIN CATEGORIA_PRO ON PRODUCTO.id_categoria = CATEGORIA_PRO.id_categoria
 JOIN PROVEEDORES ON PRODUCTO.id_proveedor = PROVEEDORES.id_proveedor
 GROUP BY CATEGORIA_PRO.nombre_categoria;
 
--- 50. 
+-- 50.  Obtén el número total de proveedores.
 SELECT COUNT(*) AS num_suppliers FROM PROVEEDORES;
 
 
@@ -482,3 +483,4 @@ GROUP BY p.nombre_producto;
 SELECT MONTH(fecha_afiliacion) AS month, COUNT(*) AS num_customers
 FROM CLIENTE
 GROUP BY month;
+
