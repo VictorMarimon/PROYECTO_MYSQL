@@ -477,13 +477,13 @@ Los siguientes roles componen la estructura general de la base de datos:
 
 - **ADMINISTRADOR** 💻: El usuario administrador es el **gestor** 🅰️ de la base de datos y tiene acceso a todos los permisos.
 
-- **PROVEEDOR** 📥: El usuario vendedor tiene permisos de consulta 🔍, ademas de actualización de sus datos.
+- **FINANZAS** 📥: El usuario de finanzas tiene permisos de consulta 🔍, ademas de actualización de sus datos e inserción.
   
-- **EMPLEADO** 💼: El usuario empleado tiene permisos de 🔍 consulta en la base de datos mediante los diferentes **procedimientos almacenados**, además dependiendo de su grado de mando 👜 tendra permisos de eliminación y la debida actualización 📝 de sus datos.
+- **AGRONOMO** 💼: El usuario agronomo tiene permisos de 🔍 consulta en la base de datos, además tienen el poder de actualizar e insertar 📝 datos.
   
-- **VENDEDOR** 📍: El usuario vendedor tiene permisos de consulta 🔍, ademas de actualización 📝 de sus datos.
+- **LOGISTICA** 📍: El usuario de logistica tiene permisos de consulta 🔍, ademas de actualización, creación y eliminación 📝 de los datos.
   
-- **CLIENTE** 🙋: El usuario cliente tiene permisos de 🔍 consulta, ademas de 📝 actualización de sus datos.
+- **SERVICIO AL CLIENTE** 🙋: El usuario de atención cliente tiene permisos de 🔍 consulta, ademas de 📝 actualización, eliminación y creación datos.
 
 ## AUTORES
 
